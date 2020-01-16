@@ -1,0 +1,37 @@
+#include <stdio.h>
+int value[10001];
+int valueSum[10001];
+int max(int a, int b, int c) {
+	int max = a;
+	if (b > max) max = b;
+	if (c > max) max = c;
+	return max;
+}
+int podoju(int n) {
+	int i;
+	if (n < 3) {
+		int sum=0;
+		for (i = 1; i <= n;i++) {
+			sum += value[i];
+		}
+		return sum;
+	}	
+	else {
+		if (valueSum[n] == 0) {
+			return valueSum[n] = max(value[n] + value[n - 1] + podoju(n - 3), value[n] + podoju(n - 2), podoju(n - 1));
+		}
+		else {
+			return valueSum[n];
+		}
+	}
+}
+int main() {
+	int n,i;
+	scanf("%d", &n);
+	for (i = 1; i <= n; i++) {
+		scanf("%d", &value[i]);
+	}
+	int total = podoju(n);
+	printf("%d", total);
+	return 0;
+}
