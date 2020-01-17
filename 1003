@@ -1,0 +1,30 @@
+#include <stdio.h>
+int one[41] = { 0,1 };
+int zero[41] = { 1,0 };
+int fiboZero(int n) {
+
+	if (n == 0) return 1;
+	if (n == 1) return 0;
+
+	if (zero[n] != 0) return zero[n];
+	else return zero[n] = fiboZero(n - 1) + fiboZero(n - 2);
+}
+int fiboOne(int n) {
+
+	if (n == 0) return 0;
+	if (n == 1) return 1;
+
+	if (one[n] != 0) return one[n];
+	else return one[n] = fiboOne(n - 1) + fiboOne(n - 2);
+
+}
+int main() {
+	int t, i;
+	scanf("%d", &t);
+	for (i = 0; i < t; i++) {
+		int n; 
+		scanf("%d", &n);
+		printf("%d %d\n", fiboZero(n), fiboOne(n));
+	}
+	return 0;
+}
