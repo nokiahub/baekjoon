@@ -1,0 +1,24 @@
+#include <stdio.h>
+int step[301];
+int memo[2][301];
+int max(int a, int b) {
+	return a > b ? a : b;
+}
+int main(void) {
+	int n, i;
+	scanf("%d", &n);
+	for (i = 1; i <= n; i++) {
+		scanf("%d", &step[i]);
+	}
+	memo[1][1] = step[1]; 
+	memo[1][2] = step[1] + step[2]; memo[0][2] = memo[1][1];
+	for (i = 3; i <= n; i++) {
+			memo[0][i] = memo[1][i - 1];
+			memo[1][i] = max(memo[0][i-1], memo[1][i-3]+step[i-1]) + step[i];
+	}
+	printf("%d", memo[1][n]);
+	return 0;
+}
+
+//처음에는 memo를 1차원 배열로 지정함 
+//2차원 배열로 수정
