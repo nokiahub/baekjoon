@@ -1,0 +1,34 @@
+#include <stdio.h>
+int number[501][501];
+int memo[501][501];
+int max(int a, int b) {
+	return a > b ? a : b;
+}
+int main(){
+	int n, i, j;
+	scanf("%d", &n);
+	for (i = 1; i <= n; i++) 
+		for (j = 1; j <= i; j++) 
+			scanf("%d", &number[i][j]);
+		
+	memo[1][1] = number[1][1];
+	memo[2][1] = memo[1][1] + number[2][1];
+	memo[2][2] = memo[1][1] + number[2][2];
+
+	for (i = 3; i <= n; i++) {
+		for (j = 1; j <= i; j++) {
+			if (j == 1) memo[i][j] = memo[i - 1][j];
+			else if (j == i) memo[i][j] = memo[i - 1][j - 1];
+			else {
+				memo[i][j] = max(memo[i-1][j], memo[i-1][j-1]);
+			}
+			memo[i][j]+= number[i][j];
+		}
+	}
+	int max = 0;
+	for (i = 1; i <= n; i++) {
+		if (memo[n][i] > max) max = memo[n][i];
+	}
+	printf("%d", max);
+	return 0;
+}
