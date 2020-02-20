@@ -1,0 +1,21 @@
+#include <stdio.h>
+int main() {
+	int number, n, answer = 0;
+	scanf("%d", &number);
+	n = number;
+	while (1) {
+		int a=0, b=0, c=0;
+		if (n < 10) {
+			c = n * 10 + n;
+		}else {
+			a = n % 10;
+			b = (a + (n / 10)) % 10;
+			c = a*10 + b; 
+		}
+		n = c;
+		answer += 1;
+		if (n == number) break;
+	}
+	printf("%d", answer);
+	return 0;
+}
