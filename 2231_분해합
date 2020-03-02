@@ -1,0 +1,21 @@
+#include <iostream>
+using namespace std;
+int main() {
+	int n, ans = 0;
+	cin >> n;
+	for (int i = 1; i < n; i++) {
+		int sum = i,tmp = i;
+		while (tmp) {
+			sum += tmp % 10;
+			tmp /= 10;
+		}
+		if (sum == n) {
+			ans = i;
+			break;
+		}
+	}
+	if (ans == 0) cout << 0 << endl;
+	else cout << ans << endl;
+	return 0;
+}
+//n까지 반복하여 i의 분해합이 n이 될 때까지 반복해서 구함.
