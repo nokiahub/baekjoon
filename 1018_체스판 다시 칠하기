@@ -1,0 +1,51 @@
+#include <iostream>
+using namespace std;
+char board[50][50];
+int n, m;
+int check(int k, int l) {
+	int wc = 0, bc = 0;
+	for (int i = k; i < k + 8; i++) {
+		for (int j = l; j < l + 8; j++) {
+			if (i % 2 == 0) {
+				if (j % 2 == 0 && board[i][j] == 'B') wc++;
+				if (j % 2 == 1 && board[i][j] == 'W') wc++;
+			}
+			else {
+				if (j % 2 == 0 && board[i][j] == 'W') wc++;
+				if (j % 2 == 1 && board[i][j] == 'B') wc++;
+			}
+		}
+	}
+	for (int i = k; i < k+8; i++) {
+		for (int j = l; j < l+8; j++) {
+			if (i % 2 == 0) {
+				if (j % 2 == 0 && board[i][j] == 'W') bc++;
+				if (j % 2 == 1 && board[i][j] == 'B') bc++;
+			}
+			else {
+				if (j % 2 == 0 && board[i][j] == 'B') bc++;
+				if (j % 2 == 1 && board[i][j] == 'W') bc++;
+			}
+		}
+	}
+	return wc < bc ? wc : bc;
+}
+int main() {
+	cin >> n >> m;
+	int ans = 64;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			cin >> board[i][j];
+		}
+	}
+	for (int i = 0; i < n - 8 + 1; i++) {
+		for (int j = 0; j < m - 8 + 1; j++) {
+			int tmp = check(i, j);
+			if (tmp < ans) ans = tmp;
+		}
+	}
+	cout << ans << endl;
+	return 0;
+}
+
+//8*8조각씩 모두 고려 (첫 칸이 white/black으로 나누어 가장 작은 값 update)
