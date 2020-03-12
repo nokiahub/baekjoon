@@ -1,0 +1,50 @@
+//모든 별을 채우고 시작
+//가운데만 empty() 호출
+//나머지는 empty_star() 재귀적 호출
+
+#include <iostream>
+using namespace std;
+char star[2187][2187];
+void empty(int row, int col, int s) {
+	for (int i = row; i < row+s; i++) {
+		for (int j = col; j < col + s; j++) {
+			star[i][j] = ' ';
+		}
+	}
+	return;
+}
+void empty_star(int row, int col , int s) {
+	if (s == 3) {
+		star[row + 1][col + 1] = ' ';
+		return;
+	}
+	int add = s / 3;
+	for (int i = row; i < row + s; i += add) {
+		for (int j = col; j < col + s; j += add) {
+			if (i == row + add  && j == col + add) {
+				empty(i, j, add);
+			}
+			else {
+				empty_star(i, j, add);
+			}
+		}
+	}
+}
+int main() {
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			star[i][j] = '*';
+		}
+	}
+	empty_star(0, 0, n);
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			cout << star[i][j];
+		}
+		cout << '\n';
+	}
+	return 0;
+}
