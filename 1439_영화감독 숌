@@ -1,0 +1,32 @@
+//666부터 6669999까지 모두 순회하며 검사 (n<=10000이니까 666에 10000곱한 후 대략 9999더하였다.)
+//check해서 6이 연속으로 3번 존재하면 true return 후 index++
+//index == n 이 되면 break;
+
+#include <iostream>
+#include <string>
+using namespace std;
+int memo[10000];
+bool check(string n) {
+	int counter = 0;
+	for (int i = 2; i < n.length(); i++) {
+		if (n[i - 2] == '6' && n[i - 1] == '6' && n[i] == '6') {
+			return true;
+		}
+	}
+	return false;
+}
+int main() {
+	int n;
+	cin >> n;
+	int index = 1;
+	for (int i = 666; i < 6669999; i++) {
+		string number = to_string(i);
+		if (check(number)) {
+			memo[index] = i;
+			index++;
+		}
+		if (index > n) break;
+	}
+	cout << memo[n] << endl;
+	return 0;
+}
