@@ -1,0 +1,33 @@
+//n=3, m=10일 때, (8,1,1), (7,2,1), (7,1,2), (6,3,1), (6,2,2), (6,1,3) ..... (1,1,8) 순서대로 구하도록 함.
+
+#include <iostream>
+using namespace std;
+int fruit[10], answer = 0;
+void go(int index, int n , int m, int selected) {
+	if (selected == m) {
+		int sum = 0;
+		for (int i = 0; i < n; i++) {
+			sum += fruit[i];
+		}
+		if (sum == m) answer += 1;
+		return;
+	}
+	if (index >= n) return;
+
+	for (int i = m-selected; i >=0 ; i--) {
+		fruit[index] += i;
+		go(index + 1, n, m, selected + i);
+		fruit[index] -= i;
+	} 
+	return;
+}
+int main() {
+	int n, m;
+	cin >> n >> m;
+	for (int i = 0; i < n; i++) {
+		fruit[i] = 1;
+	}
+	go(0, n, m, n);
+	cout << answer;
+	return 0;
+}
