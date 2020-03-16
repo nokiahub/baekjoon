@@ -1,0 +1,51 @@
+//dfs와 bfs 경우, 인접리스트 양방향을 만들어줘야 함
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <algorithm>
+using namespace std;
+vector <int> a[1001];
+bool visited[1001];
+void dfs(int start) {
+	visited[start] = true;
+	cout << start << ' ';
+	for (int i = 0; i < a[start].size(); i++) {
+		if (visited[a[start][i]]) continue;
+		dfs(a[start][i]);
+	}
+	return;
+}
+void bfs(int start) {
+	queue <int> q;
+	q.push(start);
+	visited[start] = true;
+	while (!q.empty()) {
+		int node = q.front();
+		for (int i = 0; i < a[node].size(); i++) {
+			int next = a[node][i];
+			if(visited[next]==true) continue;
+			q.push(next);
+			visited[next] = true;
+		}
+		cout << q.front() <<' ';
+		q.pop();
+	}
+}
+int main() {
+	int n, m, start;
+	cin >> n >> m >> start;
+	for (int i = 0; i < m; i++) {
+		int v1, v2;
+		cin >> v1 >> v2;
+		a[v1].push_back(v2);
+		a[v2].push_back(v1);
+	}
+	for (int i = 1; i <= n; i++) {
+		sort(a[i].begin(), a[i].end());
+	}
+	dfs(start);
+	for (int i = 0; i <= n; i++) visited[i] = false;
+	cout << '\n';
+	bfs(start);
+	return 0;
+}
