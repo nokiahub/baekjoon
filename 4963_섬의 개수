@@ -1,0 +1,45 @@
+//8개의 방향을 만들어서 dfs
+#include <iostream>
+#include <vector>
+using namespace std;
+int map[50][50];
+bool visited[50][50];
+int dx[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
+int dy[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+void dfs(int i, int j, int h, int w) {
+	if (visited[i][j] == true) return;
+	visited[i][j] = true;
+
+	for (int k = 0; k < 8; k++) {
+		int x = i + dx[k];
+		int y = j + dy[k];
+		if (x >= 0 && x < h && y >= 0 && y < w) {
+			if(map[x][y]==1)
+				dfs(x, y, h, w);
+		}
+	}
+}
+int main() {
+	while (true) {
+		int w, h;
+		cin >> w >> h;
+		if (w == 0 || h == 0) break;
+		int cnt = 0;
+		for (int i = 0; i < h; i++) {
+			for (int j = 0; j < w; j++) {
+				cin >> map[i][j];
+				visited[i][j] = false;
+			}
+		}
+		for (int i = 0; i < h; i++) {
+			for (int j = 0; j < w; j++) {
+				if (visited[i][j] == false && map[i][j] == 1) {
+					cnt++;
+					dfs(i, j, h, w);
+				}
+			}
+		}
+		cout << cnt << '\n';
+	}
+	return 0;
+}
