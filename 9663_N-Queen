@@ -1,0 +1,54 @@
+//같은 열에 두 퀸이 존재할 수 없기 때문에, n*n 전체 판을 검사하지 않고, board[0][0]~board[0][n-1]만 재귀함수를 호출한다.
+//파라미터는 좌표로 넘긴다. 넘겨진 후, 방문여부에 true로 체크한다.
+//파라미터 board[x+1][0]~board[x+1][n-1]까지 promising 한지 검사한다.
+//promising 하다면 재귀함수 호출한다. return값은 cnt로 한다.
+//promising의 경우, 좌표를 기준으로 대각선, 행, 열을 검사한다.
+#include <iostream>
+#define MAX 15
+using namespace std;
+bool board[MAX][MAX];
+int n, check[MAX];
+bool promising(int x, int y) {
+	for (int i = 0; i < n; i++) {
+		if (board[x][i] || board[i][y]) return false;
+	}
+	int nx = x - 1; int ny = y - 1;
+	while (nx >=0 && ny >=0) {
+		if (board[nx][ny]) return false;
+		nx--; ny--;
+	}
+	nx = x - 1; ny = y + 1;
+	while (nx >= 0 && ny <n) {
+		if (board[nx][ny]) return false;
+		nx--; ny++;
+	}
+	return true;
+}
+int go(int x, int y) {
+	int cnt = 0;
+	board[x][y] = true;
+	check[y] = true;
+	if(x == n-1) {
+		board[x][y] = false;
+		check[y] = false;
+		return 1;
+	}
+	for (int i = 0; i < n; i++) {
+		if (check[i]) continue;
+		if (promising(x+1, i)) {
+			cnt += go(x+1, i);
+		}
+	}
+	board[x][y] = false;
+	check[y] = false;
+	return cnt;
+}
+int main() {
+	cin >> n;
+	int answer = 0;
+	for (int i = 0; i < n; i++) {
+		answer += go(0, i);
+	}
+	cout << answer;
+	return 0;
+}
