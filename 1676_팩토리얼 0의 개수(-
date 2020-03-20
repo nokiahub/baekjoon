@@ -1,0 +1,32 @@
+//이슈 : n!연산에서 n이 커지기때문에 int의 범위를 벗어난다.
+#include <iostream>
+#include <math.h>
+using namespace std;
+int f=1;
+int check(int number) {
+	int c = 0;
+	while (number % 10 == 0) {
+		c++;
+		number /= 10;
+	}
+	return c;
+}
+void cut() {
+	f = f % 1000000;
+}
+int main() {
+	int n, cnt = 0;
+	cin >> n;
+	for (int i = 2; i <= n; i++) {
+		f = f * i;
+		int div = check(f); 
+		if (div > 0) {
+			f /= pow(10, div);
+			cnt += div;
+		}
+		cut();
+	}
+	cout << cnt;
+	return 0;
+
+}
