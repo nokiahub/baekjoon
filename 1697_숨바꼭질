@@ -1,0 +1,49 @@
+//시작점 : n, 도착점 : k
+//움직일 수 있는 경우 : 현재지점이 x이면, x-1, x+1, 2*x 로 갈 수 있다.
+//처음에는 greedy로 풀어서 틀림
+//일종의 최단거리라는 점을 이용해 존재할 수 있는 모든 edge를 입력 후 bfs탐색함.
+//이슈: edge를 입력할 때, n->n-1, n->n+1; 로 해야 함 (n->n+1, n+1->2 로 입력했다가 n->n-1의 경우가 빠져서 틀림) 
+//가능한 모든 edge를 다 고려해야 함
+
+#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+vector <int> v[200001];
+bool visited[200001];
+int dist[200001];
+int n, k;
+void bfs(int n) {
+	queue <int> q;
+	q.push(n);
+	visited[n] = true;
+	while (!q.empty()) {
+		int node = q.front();
+		q.pop();
+		if (node == k) {
+			cout << dist[node];
+			return;
+		}
+		for (int i = 0; i < v[node].size(); i++) {
+			int next = v[node][i];
+			if (visited[next]) continue;
+			visited[next] = true; dist[next] = dist[node] + 1;
+			q.push(next);
+			
+		}
+	}
+}
+int main() {
+	cin >> n >> k;
+	if (k <= n) cout << n - k;
+	else {
+		for (int i = 0; i <= k+(k-n); i++) {
+			if (2 * i <= k + (k - n))
+				v[i].push_back(2 * i);
+			v[i].push_back(i + 1);
+			if(i-1>=0) v[i].push_back(i-1);
+		}
+		bfs(n);
+	}
+	return 0;
+}
