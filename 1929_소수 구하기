@@ -1,0 +1,29 @@
+//에라토스테네스의 체
+//i: 2부터 sqrt(n)까지 2~n을 곱한 수를 제외
+//memo[i]==false면 continue
+
+#include <iostream>
+#include <math.h>
+using namespace std;
+bool memo[1000001];
+int main() {
+	int m, n;
+	cin >> m >> n;
+	
+	for (int i = 2; i <= n; i++) {
+		memo[i] = true;
+	}
+	memo[1] = false;
+	for (int i = 2; i < sqrt(n); i++) {
+		if (memo[i]==false) continue;
+
+		for (int j = 2; j <= n; j++) {
+			if (j*i > n) break;
+			memo[j*i] = false;
+		}
+	}
+	for (int i = m; i <= n; i++) {
+		if (memo[i]) cout << i << '\n';
+	}
+	return 0;
+}
