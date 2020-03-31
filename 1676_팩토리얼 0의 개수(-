@@ -30,3 +30,24 @@ int main() {
 	return 0;
 
 }
+
+
+//더 깔끔한 방법
+//2*5==10임을 이용하여 모든 2의 갯수와 5의 갯수를 구한 후 둘 중 최소값 출력
+#include <iostream>
+#include <algorithm>
+using namespace std;
+int main() {
+	int n;
+	cin >> n;
+	int two = 0, five = 0;
+	//
+	for (int i = 2; i <= n; i *= 2) {
+		two += n / i;
+	}
+	for (int i = 5; i <= n; i *= 5) {
+		five += n / i;
+	}
+	cout << min(two, five);
+	return 0;
+}
