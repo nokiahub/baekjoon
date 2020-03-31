@@ -1,0 +1,36 @@
+//주어진 수에서 6개를 뽑는 조합
+//다이나믹 프로그래밍
+//포함시키나 안시키냐로 나눠서 시간복잡도O(N!) -> O(2^N)으로 줄인다
+
+#include <iostream>
+using namespace std;
+int number[13], k;
+bool check[13];
+void go(int index, int selected, int n) {
+	if (selected == n) {
+		for (int i = 0; i < k; i++) {
+			if (check[i]) cout << number[i] << ' ';
+		}
+		cout << '\n';
+		return;
+	}
+	if (index > k-1) return;
+	check[index] = true;
+	go(index + 1, selected + 1, n);
+	check[index] = false;
+
+	go(index + 1, selected, n);
+	return;
+} 
+int main() {
+	cin >> k;
+	while(k != 0) {
+		for (int i = 0; i < k; i++) {
+			cin >> number[i];
+		}
+		go(0, 0, 6);
+		cout << '\n';
+		cin >> k;
+	}
+	return 0;
+}
