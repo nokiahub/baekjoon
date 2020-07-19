@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+int n, m;
+vector <pair<int, int>> chicken, home;
+int maxDist = -1;
+bool check[13];
+
+void go(int m, int selected, int index){
+    if(selected==m){
+        int totalDist=0;
+        
+        for(int i = 0 ; i<home.size(); i++){
+            int dist= -1;
+            for(int j = 0 ; j<chicken.size(); j++){
+                if(check[j]==false) continue;
+                int tmp = abs(home[i].first-chicken[j].first) + abs(home[i].second-chicken[j].second);
+                if(dist==-1 || tmp<dist) dist=tmp;
+            }
+            totalDist+=dist;
+        }
+        if(maxDist==-1 || maxDist>totalDist) maxDist = totalDist;
+        return;
+    }
+    if(index >= chicken.size()) return;
+    
+    check[index] = true;
+    go(m, selected+1, index+1);
+    check[index] = false;
+    go(m, selected, index+1);
+    
+    return;
+}
+int main(){
+    cin >> n >> m;
+    
+    for(int i = 1 ; i<=n ; i++){
+        for(int j = 1 ; j<=n ; j++){
+            int number;
+            cin >> number;
+            if(number==2){
+                chicken.push_back(pair<int, int>(i, j));
+            }else if(number==1){
+                home.push_back(pair<int,int>(i , j));
+            }
+        }
+    }
+    go(m, 0, 0);
+    cout << maxDist;
+    return 0;
+}
