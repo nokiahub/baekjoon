@@ -1,0 +1,24 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+bool a[1000001], b[1000001];
+int n;
+int main(){
+    scanf("%d", &n);
+    for(int i = 0 ; i<n ; i++){
+        int tmp;
+        scanf("%d", &tmp);
+        if(tmp>=0) a[tmp] = true;
+        else{
+            tmp = -tmp;
+            b[tmp] = true;
+        }
+    }
+    for(int i = 1000000; i>0 ; i--){
+        if(b[i]) printf("%d\n", -i);
+    }
+    for(int i = 0 ; i<=1000000; i++){
+        if(a[i]) printf("%d\n", i);
+    }   
+    return 0;
+}
