@@ -1,0 +1,43 @@
+#include <iostream>
+#include <stack>
+#include <vector>
+using namespace std;
+int arr[100001], n;
+vector <char> ans;
+stack <int> s1, s2;
+bool possible = true;
+int main(){
+    scanf("%d", &n);
+    for(int i = 0 ; i<n ; i++){
+        scanf("%d", &arr[i]);
+        s1.push(n-i);
+    }
+    for(int i = 0 ; i<n ; i++){
+        int tmp = -1;
+        
+        if(s2.empty() || (!s2.empty() &&s2.top() < arr[i]) ){
+            while(tmp != arr[i]){
+                tmp = s1.top(); s1.pop();
+                s2.push(tmp);
+                ans.push_back('+');
+            }
+            s2.pop();
+            ans.push_back('-');
+        }else if(!s2.empty()){
+            if(arr[i] == s2.top()){
+                ans.push_back('-');
+                s2.pop();
+            }else if(arr[i] < s2.top()){
+                possible = false;
+                break;
+            }
+        }
+    }
+    if(possible){
+        for(char c : ans)
+            printf("%c\n", c);
+    }else{
+        printf("NO");
+    } 
+    return 0;
+}
