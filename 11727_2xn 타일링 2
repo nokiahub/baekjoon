@@ -1,0 +1,22 @@
+//다이나믹 프로그래밍(메모이제이션) 을 사용하여 문제를 푼다.
+//규칙성은 알아서 찾는다.
+
+#include <iostream>
+using namespace std;
+
+int memo[1001];
+
+int dynamic(int n){
+    if(n==1 || n==2 || memo[n]) return memo[n];
+    else return memo[n] = (dynamic(n-1) + 2*dynamic(n-2))%10007;
+}
+
+int main(){
+    memo[1] = 1; memo[2] = 3;
+    int n;
+    scanf("%d", &n);
+
+    dynamic(n);
+    printf("%d", memo[n]);
+    return 0;
+}
