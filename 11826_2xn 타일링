@@ -3,6 +3,7 @@ using namespace std;
 int memo[1001];
 
 int dynamic(int n){
+
     if(n==1 || n==2 || memo[n]) return memo[n];
     else return memo[n] = (dynamic(n-1) + dynamic(n-2))%10007;
 }
