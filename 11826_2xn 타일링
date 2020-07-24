@@ -1,0 +1,17 @@
+#include <iostream>
+using namespace std;
+int memo[1001];
+
+int dynamic(int n){
+    if(n==1 || n==2 || memo[n]) return memo[n];
+    else return memo[n] = (dynamic(n-1) + dynamic(n-2))%10007;
+}
+int main(){
+    memo[1] = 1; memo[2] = 2;
+    int n;
+    scanf("%d", &n);
+
+    dynamic(n);
+    printf("%d", memo[n]);
+    return 0;
+}
