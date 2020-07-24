@@ -1,0 +1,65 @@
+#include <iostream>
+using namespace std;
+
+int dfs(int x, int next , int arr[], int *visited, int *count, int cnt){
+    //리턴 값 초기화
+    int ret = 0;
+    //다음 인덱스의 어레이 값이 x를 가리키는 경우(x를 포함한 cycle)
+    if(arr[next] == x){
+        //visited를 체크해서 다시 순회하지 않도록한다.
+        visited[next] = x;
+        return 0;
+    }
+    
+    //x를 제외하고 사이클 발생
+    //visited[next]값이 존재한다는 가정이므로 visited[next]체크할 필요 없음
+    if(visited[next]==x){
+         //x값을 시작으로 순회할 때 cycle이 발생하는 경우
+        return count[next];
+        //다른 cycle을 가리키는 경우는 x~next까지 모든 노드가 팀을 못찾는 경우이다. cnt를 반환
+    }else if(visited[next]){
+        
+        return cnt;
+    }   
+    
+    
+    visited[next] = x;
+    count[next] = cnt;
+    
+    
+    ret = dfs(x, arr[next], arr, visited, count, cnt+1);
+    
+    return ret;
+    
+}
+int main(){
+    int t;
+    scanf("%d", &t);
+    
+    for(int i = 0 ; i<t ; i++){
+        int n, arr[100001] ={0,};
+        int visited[100001]={0, };
+        int count[100001] = {0, };
+        scanf("%d", &n);
+        int answer = 0;
+        
+        for(int j = 1; j<=n ; j++){
+            scanf("%d", &arr[j]);
+            if(arr[j]==j){
+                visited[j] = j;
+            }
+        }
+        
+        for(int j = 1 ; j<=n ; j++){
+            if(visited[j]) continue;
+            visited[j] = j;
+            count[j] =1;
+            int tmp = dfs(j, arr[j], arr, visited, count, 1);
+            answer += tmp;
+            
+        }
+        printf("%d\n", answer);
+        
+    }
+    return 0;
+}
