@@ -1,0 +1,26 @@
+//그리디 알고리즘을 이용한다.
+
+#include <iostream>
+using namespace std;
+int money[6] ={500, 100, 50, 10, 5, 1};
+
+int main(){
+    int n;
+    scanf("%d", &n);
+    n = 1000-n;
+    
+    int answer=0;
+    
+    int index = 0;
+    while(n>0){
+        if(money[index] > n){
+            while(money[index]>n){
+                ++index;
+            }
+        }
+        ++answer;
+        n=n-money[index];
+    }
+    printf("%d", answer);
+    return 0;
+}
