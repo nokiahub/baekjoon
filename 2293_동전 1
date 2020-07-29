@@ -1,0 +1,27 @@
+//다이나믹 프로그래밍
+//i = 포함하는 동전의 개수, j = 목표 금액
+//k값을 만들 수 있는 경우의 수이므로 값이 누적된다.
+//answer[j] += answer[j-value[i]] 는 answer[j]에 value[i]를 사용하여 추가되는 경우의 수를 더한다.
+
+#include <iostream>
+using namespace std;
+
+int main(){
+    int n, k;
+    int value[101];
+    int answer[10001] = {0,};
+    scanf("%d %d", &n, &k);
+    
+    for(int i = 1 ; i<=n ; i++){
+        scanf("%d", &value[i]);
+    }
+    answer[0] = 1;
+
+    for(int i = 1 ; i<=n ; i++){
+        for(int j = value[i] ; j<=k ; j++){
+            answer[j] += answer[j-value[i]];
+        }
+    }
+    printf("%d", answer[k]);
+    return 0;
+}
