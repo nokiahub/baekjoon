@@ -1,0 +1,31 @@
+//그리디 알고리즘
+
+#include <iostream>
+#include <string.h>
+using namespace std;
+
+char a[50], b[50];
+
+int main(){
+    scanf("%s %s", a, b);
+    
+    int match = 0;
+    int start = 0, end = 0;
+    
+    for(int i = 0 ; i<strlen(b)-strlen(a)+1; i++){
+        int tmp = 0;
+        int j;
+        for(j = 0 ; j<strlen(a); j++){
+            if(b[i+j]==a[j]) tmp = tmp+1;
+        }
+        if(tmp>match){
+            start = i;
+            end = j;
+            match = tmp;
+        }
+    }
+    
+    int answer = strlen(a)-match;
+    printf("%d", answer);
+    return 0;
+}
