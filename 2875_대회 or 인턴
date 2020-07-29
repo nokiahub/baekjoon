@@ -1,0 +1,23 @@
+#include <iostream>
+using namespace std;
+
+int main(){
+    int n, m, k;
+    scanf("%d %d %d", &n, &m, &k);
+    
+    int teamNum = 0;
+    while(n>=2 && m>=1){
+        teamNum = teamNum+1;
+        n = n-2; m = m-1;
+    }
+    
+    int rest = n + m;
+    k = k - rest;
+    
+    while(k>0){
+        teamNum = teamNum-1;
+        k = k-3;
+    }
+    printf("%d", teamNum);
+    return 0;
+}
