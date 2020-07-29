@@ -1,0 +1,25 @@
+//n개의 카드를 구입할 때 가장 비싼 값을 지불하는 방법을 구한다.
+//p[i]를 포함하지 않고 i개의 카드를 사는 방법pay[j]의 값과 
+//p[i]를 포함하여 i개의 카드를 사는 방법 pay[j-i]+p[i] 두 값 중 비싼 값을 업데이트한다.
+
+#include <iostream>
+using namespace std;
+
+int main(){
+    int n;
+    int p[1001];
+    int pay[1001]={0,};
+    scanf("%d", &n);
+    
+    for(int i = 1 ; i<=n ; i++){
+        scanf("%d", &p[i]);
+    }
+
+    for(int i = 1 ; i<=n ; i++){
+        for(int j = i ; j<=n ; j++){
+            pay[j] = max(pay[j], pay[j-i] + p[i]);
+        }
+    }
+    printf("%d", pay[n]);
+    return 0;
+}
