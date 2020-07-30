@@ -1,0 +1,150 @@
+//cheesecheck = 남은 치즈가 있는 경우 return true
+//bfscheck = 일단 bfs모두 순회하고 구멍에 해당하면 flag는 true 구멍이 아니면 flag false 를 return
+//bfs = 의 리턴값이 true(구멍에 해당하는 영역)일경우 bfs를 하며 check에 표시
+//모든 영역을 순회하며 구멍이 아닌 테두리 영역에 노출된 1들을 모두 체크(tmpcheck) 한 후,
+//체크된 영역들을 0으로 바꾼다.
+
+#include <iostream>
+#include <queue>
+#include <vector>
+using namespace std;
+int cheese[100][100];
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};
+bool check[100][100];
+bool visited[100][100];
+
+int n, m;
+bool cheesecheck(int cheese[][100]){
+    for(int i = 1 ; i<n-1 ; i++){
+        for(int j = 1 ; j<m-1 ; j++){
+            if(cheese[i][j]==1) return true;
+        }
+    }
+    return false;
+}
+
+bool bfscheck(int i, int j){
+    bool flag= true;
+    queue <pair<int, int>> q;
+    q.push(make_pair(i, j));
+    visited[i][j] = true;
+    
+    while(!q.empty()){
+        pair <int, int> node = q.front();
+        q.pop();
+        int x = node.first; int y = node.second;
+        if(x==0 || x==n-1 || y==0 || y==m-1) flag = false;
+        for(int i = 0 ; i<4 ; i++){
+            int nx = x + dx[i]; int ny = y +dy[i];
+            if(nx>=0 && nx<n && ny>=0 && ny<m){
+                if(cheese[nx][ny]==0 && !visited[nx][ny]){
+                    q.push(make_pair(nx, ny));
+                    visited[nx][ny] = true;
+                }
+            }
+        }
+    }
+    
+    return flag;
+}
+
+void bfs(int i, int j){
+    
+    queue <pair<int, int>> q;
+    q.push(make_pair(i, j));
+    check[i][j] = true;
+    
+    while(!q.empty()){
+        pair <int, int> node = q.front();
+        q.pop();
+        int x = node.first; int y = node.second;
+        for(int i = 0 ; i<4 ; i++){
+            int nx = x + dx[i]; int ny = y +dy[i];
+            if(nx>=0 && nx<n && ny>=0 && ny<m){
+                if(cheese[nx][ny]==0 && !check[nx][ny]){
+                    q.push(make_pair(nx, ny));
+                    check[nx][ny] = true;
+                }
+            }
+        }
+    }
+    
+    return;
+}
+
+int main(){
+    scanf("%d %d", &n, &m);
+    
+    for(int i = 0 ; i<n ; i++){
+        for(int j = 0 ; j<m ; j++){
+            scanf("%d", &cheese[i][j]);
+        }
+    }
+    vector <pair<int, int>> answer;
+    int hour=0;
+    
+    
+    while(cheesecheck(cheese)){
+        //check= 구멍에 해당하는 구역에 true
+        
+        for(int i = 0 ; i<n ; i++){
+            for(int j = 0 ; j<m ; j++){
+                check[i][j]=false;
+                visited[i][j]=false;
+            }
+        }
+        check[100][100]={false,};
+        visited[100][100]={false,};
+        
+        int count = 0;
+        for(int i = 1 ; i<n-1 ; i++){
+            for(int j = 1 ; j<m-1 ; j++){
+                if(cheese[i][j]==0 && !visited[i][j]){
+                    
+                    if(bfscheck(i,j)){
+                        bfs(i, j);
+                    }else{
+                        break;
+                    }
+                    
+                }
+            }
+        }
+        
+        bool tmpcheck[100][100] = {false,};
+        //테두리 없애기
+        for(int i = 1 ; i<n-1; i++){
+            for(int j= 1 ; j<m-1 ; j++){
+                
+                if(cheese[i][j]==1){
+                    
+                    for(int k = 0 ; k<4 ; k++){
+                        int x = i+dx[k]; int y = j+dy[k];
+                        if(x>=0 && x<n && y>=0 && y<m){
+                            
+                            if(cheese[x][y]==0 && !check[x][y]){
+                                tmpcheck[i][j] = true;
+                                count = count+1;
+                                break;
+                            }
+                            
+                        }
+                    }
+                    
+                }
+                
+            }
+        }
+        for(int i = 1 ; i<n-1 ; i++){
+                   for(int j = 1 ; j<m-1 ; j++){
+                       if(tmpcheck[i][j]==true) cheese[i][j] = 0;
+                   }
+        }
+        hour = hour+1;
+        answer.push_back(make_pair(hour, count));
+    }
+    int index = answer.size()-1;
+    
+    printf("%d\n%d", answer[index].first, answer[index].second);
+    return 0;
+}
