@@ -1,0 +1,54 @@
+//우선순위 큐에 Number(원래 값, 절대 값)을 차례대로 넣는다.
+//우선순위 큐의 cmp함수는 절대 값이 같을 경우 원래 값이 큰 값을 return, 절대 값이 다를 경우 절대 값이 큰 값을 return 한다.
+
+
+#include <iostream>
+#include <queue>
+using namespace std;
+
+struct Number{
+    int original;
+    int absolute;
+};
+
+struct cmp{
+    bool operator()(Number a, Number b){
+        if(a.absolute == b.absolute)
+            return a.original > b.original;
+        else
+            return a.absolute > b.absolute;
+    }
+};
+
+
+int main(){
+    int n;
+    priority_queue<Number, vector<Number>, cmp> pq;
+    
+    scanf("%d", &n);
+    for(int i = 0 ; i<n ; i++){
+        int in;
+        scanf("%d", &in);
+        if(in == 0){
+            if(pq.empty())printf("%d", 0);
+            else{
+                printf("%d", pq.top().original);
+                pq.pop();
+            }
+            printf("\n");
+        }else{
+            Number num;
+        
+            if(in<0){
+                num.original = in;
+                num.absolute = -in;
+            }else{
+                num.original = in;
+                num.absolute = in;
+            }
+            
+            pq.push(num);
+        }
+    }  
+    return 0;
+}
