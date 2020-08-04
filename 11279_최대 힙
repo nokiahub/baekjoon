@@ -1,0 +1,77 @@
+//https://velog.io/@nokia
+
+#include <stdio.h>
+#define HEAP_SIZE 100001
+
+using namespace std;
+int heap[HEAP_SIZE];
+int heapCount = 0;
+
+void swap(int *a, int *b){
+    int tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+void push(int x){
+    heap[++heapCount] = x;
+    
+    int child = heapCount;
+    int parent = child/2;
+    
+    while(child>1 && heap[child]>heap[parent]){
+        swap(&heap[child], &heap[parent]);
+        child = parent;
+        parent = child/2;
+    }
+    
+}
+
+int pop(){
+    int ret = heap[1];
+    
+    swap(&heap[1], &heap[heapCount]);
+    heapCount = heapCount-1;
+    
+    int parent = 1;
+    int child = parent*2;
+    
+    if(child+1 <= heapCount){
+        child = (heap[child]>heap[child+1]) ? child : child+1;
+    }
+    
+    while(child<=heapCount && heap[child]>heap[parent]){
+        swap(&heap[child], &heap[parent]);
+        parent = child;
+        child = parent*2;
+        
+        if(child+1 <= heapCount){
+            child = (heap[child]>heap[child+1])? child : child+1;
+        }
+    }
+    
+    return ret;
+}
+
+
+int main(){
+    int n;
+    scanf("%d", &n);
+    
+    for(int i = 0 ; i<n ; i++){
+        int num;
+        scanf("%d", &num);
+        
+        if(num==0){
+            if(heapCount==0){
+                printf("%d", 0);
+            }else{
+                printf("%d", pop());
+            }
+            printf("\n");
+        }else{
+            push(num);
+        }
+    }
+    return 0;
+}
