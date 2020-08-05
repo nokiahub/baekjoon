@@ -1,0 +1,55 @@
+//n이 100이기 때문에 한 장소에서 다른 모든 장소의 거리를 각각 구해도 된다. O(n^2)
+//서로다른 모든 장소를 구해서 결과를 bool possible배열에 저장한다.
+//dfs탐색
+
+#include <iostream>
+#include <string.h>
+#include <stdlib.h>
+using namespace std;
+
+struct Place{
+    int x;
+    int y;
+};
+bool visited[102];
+bool possible[102][102];
+bool answer = false;
+void dfs(int start, int dest, int shop){
+    visited[start] = true;
+    if(start == dest) answer = true;
+    
+    for(int i = 1 ; i<=shop+1 ; i++){
+        if(possible[start][i] && !visited[i]) dfs(i, dest, shop);
+    }
+    return;
+}
+
+int main(){
+    int t;
+    scanf("%d", &t);
+    
+    for(int i = 0 ; i<t ; i++){
+        int n;
+        Place place[102];
+        answer =false;
+        memset(visited, false, sizeof(visited));
+        memset(possible, false, sizeof(possible));
+        
+        scanf("%d", &n);
+        for(int j = 0 ; j<n+2 ; j++){
+            cin >> place[j].x >> place[j].y;
+        }
+        
+        for(int j = 0 ; j<n+2 ; j++){
+            for(int k = 0 ; k<n+2 ; k++){
+                int dist = abs(place[j].x-place[k].x)+abs(place[j].y-place[k].y);
+                if(dist<=1000) possible[j][k] = true;
+            }
+        }
+        dfs(0, n+1, n);
+        if(answer) printf("happy");
+        else printf("sad");
+        printf("\n");
+    }
+    return 0;
+}
