@@ -1,0 +1,48 @@
+//이분매칭을 이용해서 소와 축사를 1:1 매칭한다.
+//check배열 초기화 범위가 fill(check, check+m, false)로 해서 계속 오답이 나왔다.
+//m의 인덱스가 1~m이기 때문에 fill(check, check+m+1, false)로 초기화해야 한다.
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+vector <int> cowhouse[201];
+int match[201];
+bool check[201];
+int n, m;
+
+bool dfs(int x){
+    for(int i=0; i<cowhouse[x].size(); i++){
+        int t = cowhouse[x][i];
+        if(check[t]) continue;
+        check[t] = true;
+        if(match[t]==0 || dfs(match[t])){
+            match[t] = x;
+            return true;
+        }
+    }
+    return false;
+}
+
+int main(){
+    cin >> n >> m;
+    
+    for(int i=1 ; i<=n ; i++){
+        int num;
+        cin >> num;
+        for(int j = 0; j<num ; j++){
+            int x;
+            cin >> x;
+            cowhouse[i].push_back(x);
+        }
+    }
+    
+    int count = 0;
+    for(int i=1; i<=n ; i++){
+        fill(check, check+m+1, false);
+        if(dfs(i)) count++;
+    }
+    cout << count;
+    return 0;
+}
