@@ -1,0 +1,62 @@
+//최대 힙을 이용한다.
+
+#include <iostream>
+#include <queue>
+using namespace std;
+int n;
+long long minimum = 0;
+int dist[100001];
+
+int main(){
+    //입출력 속도 향상
+    ios_base :: sync_with_stdio(false);
+    cin.tie(NULL);
+    cin.tie(NULL);
+    cin >> n;
+    for(int i = 0 ; i<n-1 ; i++) cin >> dist[i];
+    
+    priority_queue<long long> pq;
+    long long tmp;
+    cin >> tmp;
+    pq.push(-tmp);
+    
+    for(int i = 0 ; i<n-1 ; i++){
+        minimum += -dist[i]*pq.top();
+        cin >> tmp;
+        pq.push(-tmp);
+    }
+    cout << minimum;
+    return 0;
+}
+
+
+//#include <iostream>
+//using namespace std;
+//int n;
+//long long minimum = 0;
+//int dist[100001], price[100001];
+//
+//int main(){
+//    cin >> n;
+//
+//    for(int i = 0 ; i<n-1 ; i++) cin >> dist[i];
+//    for(int i = 0 ; i<n ; i++) cin >> price[i];
+//
+//    int i = 0, next = 0;
+//    long long total_distance = 0;
+//    while(i<n-1){
+//
+//        total_distance = dist[i];
+//        next = i+1;
+//
+//        while(next<n-1 && price[i]<price[next]){
+//            total_distance += dist[next];
+//            next++;
+//        }
+//
+//        minimum += price[i]*total_distance;
+//        i = next; total_distance = 0;
+//    }
+//    cout << minimum;
+//    return 0;
+//}
