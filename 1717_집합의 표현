@@ -1,0 +1,53 @@
+//경로압축(path compression)을 이용하고 한 트리의 rank에 따라 집합에 포함되거나 포함하는 기준을 정한다.
+//단순배열을 사용할 경우 find 시간복잡도 O(N) == union 시간복잡도 O(N)
+//트리구조(rank) 및 경로압축 사용할 경우 O(N)
+
+#include <iostream>
+using namespace std;
+int n, m, parent[1000001], treerank[1000001];
+
+int find(int x){
+    if(parent[x]==x){
+        return x;
+    }
+    return parent[x] = find(parent[x]);
+}
+
+void union_parent(int x, int y){
+    int parentx = find(x);
+    int parenty = find(y);
+    if(parentx==parenty) return;
+    
+    if(treerank[parentx] < treerank[parenty]){
+        parent[parentx] = parenty;
+    }else{
+        parent[parenty] = parentx;
+    }
+    if(treerank[parentx] == treerank[parenty]){
+        treerank[x]++;
+    }
+    return;
+}
+
+int main(){
+    ios :: sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    
+    cin >> n >> m;
+    for(int i = 0 ; i<=n ; i++){
+        parent[i] = i;
+        treerank[i] = 0;
+    }
+    for(int i = 0 ; i<m ; i++){
+        int op, a, b;
+        cin >> op >> a >> b;
+        if(op==0){
+            union_parent(a, b);
+        }else{
+            if(find(a)==find(b)) cout << "YES" <<'\n';
+            else cout << "NO" <<'\n';
+        }
+    }
+    return 0;
+}
