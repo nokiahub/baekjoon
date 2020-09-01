@@ -1,0 +1,150 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#define MOVE_S 10
+#define INF 11
+using namespace std;
+
+int n, m, dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};
+char board[10][10];
+
+bool check(char b[10][10], vector <int>&move){
+    if(move.empty())return false;
+
+    int rx, ry, bx, by;
+    for(int i = 0 ; i<n ; i++){
+        for(int j = 0; j<m ; j++){
+            if(b[i][j]=='R'){
+                rx = i;
+                ry = j;
+            }
+            if(b[i][j]=='B'){
+                bx = i;
+                by = j;
+            }
+        }
+    }
+    bool redo = false, blueo = false;
+    for(int i = 0 ; i<move.size(); i++){
+        bool con = true;
+        while(con){
+            int dir = move[i];
+            int nrx = rx + dx[dir], nry = ry + dy[dir];
+            int nbx = bx + dx[dir], nby = by + dy[dir];
+            
+            if(redo){
+                nrx = rx;
+                nry = ry;
+            }
+            if(blueo){
+                nbx = bx;
+                nby = by;
+            }
+            
+            int x1, y1, x2, y2;
+            if(i<move.size()-1 && (b[nrx][nry]=='O' || b[nbx][nby]=='O')) return false;
+            
+            if(b[nrx][nry]=='O') {
+                x1 = nrx;
+                y1 = nry;
+                redo = true;
+            }else if(b[nrx][nry] == '.'){
+                x1 = nrx;
+                y1 = nry;
+            }else if(b[nrx][nry] == '#'){
+                x1 = rx;
+                y1 = ry;
+            }else if(b[nrx][nry] == 'B'){
+                if(b[nbx][nby]=='#'){
+                    x1 = rx;
+                    y1 = ry;
+                }else if(b[nbx][nby]=='.' || b[nbx][nby]=='O'){
+                    x1 = nrx;
+                    y1 = nry;
+                }
+            }
+            
+            if(b[nbx][nby]=='O'){
+                x2 = nbx;
+                y2 = nby;
+                blueo = true;
+            }else
+            if(b[nbx][nby] == '.'){
+                x2 = nbx;
+                y2 = nby;
+            }else if(b[nbx][nby] == '#'){
+                x2 = bx;
+                y2 = by;
+            }else if(b[nbx][nby] == 'R'){
+                if(b[nrx][nry]=='#'){
+                    x2 = bx;
+                    y2 = by;
+                }else if(b[nrx][nry]=='.' || b[nrx][nry]=='O'){
+                    x2 = nbx;
+                    y2 = nby;
+                }
+            }
+            if(rx == x1 && ry == y1 && bx == x2 && by == y2){
+                con = false;
+                break;
+            }
+           
+            if(redo){
+                b[x1][y1] = 'O';
+                b[rx][ry] = '.';
+            }else{
+                b[rx][ry] = '.'; b[x1][y1] = 'R';
+                rx = x1; ry = y1;
+            }
+            if(blueo){
+                b[x2][y2] = 'O';
+                b[bx][by] = '.';
+            }else{
+                b[bx][by] = '.'; b[x2][y2] = 'B';
+                bx = x2; by = y2;
+            }
+        }
+    }
+    if(blueo) return false;
+    if(redo) return true;
+    return false;
+}
+
+int solve(int selected, int limit, vector <int>& move){
+    if(selected > MOVE_S){
+        return INF;
+    }
+    char b[10][10];
+    for(int i = 0 ; i<n ; i++){
+        for(int j = 0 ; j<m ; j++){
+            b[i][j] = board[i][j];
+        }
+    }
+    if(check(b, move)) return selected;
+    
+    int ret = INF;
+    for(int i = 0 ; i<4 ; i++){
+        if(move.empty() || (!move.empty() && move.back()!=i)){
+            move.push_back(i);
+            ret = min(ret, solve(selected+1, limit, move));
+            move.pop_back();
+        }
+    }
+    return ret;
+}
+
+int main(){
+    cin >> n >> m;
+    for(int i = 0 ; i<n ; i++){
+        string s;
+        cin >> s;
+        for(int j = 0; j<m ; j++){
+            board[i][j] = s[j];
+        }
+    }
+    vector <int> move;
+    int answer = solve(0, MOVE_S, move);
+    if(answer == INF) answer = -1;
+    cout << answer;
+    return 0;
+}
