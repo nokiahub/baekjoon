@@ -1,0 +1,46 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+int sticker[2][100000], memo[2][100000], n;
+
+int dynamic(int x, int y){
+    if(y >= n) return 0;
+    
+    int &ret = memo[x][y];
+    if(ret!=-1) return ret;
+    
+    ret = 0;
+    //자기 자신을 포함하고 인접한 스티커를 포함하지 않는 경우 & 자기자신을 포함하지 않고 인접한 스티커를 포함하는 경우를 고려한다.
+    //그 외에 스티커는 고려할 필요 없기 떄문에 j를 n-1 까지 고려하면 시간초과 
+    for(int i = 0 ; i<2 ; i++){
+        for(int j = y+1 ; j<y+2 ; j++){
+            if( (i==x && j==y+1) || (i!=x && j==y) ){
+                ret = max(ret, dynamic(i, j));
+            }else{
+                ret = max(ret, sticker[x][y] + dynamic(i, j));
+            }
+        }
+    }
+    return ret;
+}
+int main(){
+    int t;
+    cin >> t;
+    while(t--){
+        cin >> n;
+        for(int i = 0 ; i<2 ; i++){
+            for(int j = 0 ; j<n ; j++){
+                cin >> sticker[i][j];
+            }
+        }
+        memset(memo, -1, sizeof(memo));
+        int answer = 0;
+        
+        //시작위치 고정하기
+        for(int i = 0 ; i<2 ; i++){
+            answer = max(answer, dynamic(i, 0));
+        }
+        cout << answer <<'\n';
+    }
+    return 0;
+}
