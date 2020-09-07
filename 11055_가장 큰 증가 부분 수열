@@ -1,0 +1,33 @@
+//가장 긴 증가 부분 수열을 응용하여 memo에 수열의 길이 대신 숫자의 합을 저장한다.
+
+#include <iostream>
+#include <cstring>
+using namespace std;
+int n, a[1000],memo[1000];
+
+int lis(int start){
+    int &ret = memo[start];
+    if(ret!=-1) return ret;
+    
+    ret = a[start];
+    for(int i = start+1 ; i<n ; i++){
+        if(a[start] < a[i]){
+            ret = max(ret, a[start] + lis(i));
+        }
+    }
+    return ret;
+}
+
+int main(){
+    cin >> n;
+    for(int i = 0 ; i<n ; i++){
+        cin >> a[i];
+    }
+    memset(memo, -1, sizeof(memo));
+    int answer = 0;
+    for(int i = 0 ; i<n ; i++){
+        answer  = max(answer , lis(i));
+    }
+    cout << answer;
+    return 0;
+}
