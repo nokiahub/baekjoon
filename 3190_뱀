@@ -1,0 +1,77 @@
+#include <iostream>
+#include <cstring>
+#include <queue>
+using namespace std;
+
+int board[100][100], dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1}, n, apple, seconds = 0;
+int time_move[10001], body[100][100];
+int headx = 0, heady = 0, dir = 1, mv;
+int tailx = 0, taily = 0;
+queue <pair<int, int>> find_tail;
+
+bool collide(){
+    int nx = headx + dx[dir], ny = heady + dy[dir];
+    if(nx < 0 || nx >= n || ny < 0 || ny >= n) return true;
+    if(body[nx][ny]) return true;
+    
+    if(board[nx][ny]==1){
+        board[nx][ny] = 0;
+        body[nx][ny] = 1;
+        find_tail.push(make_pair(nx, ny));
+    }else{
+        body[nx][ny] = 1;
+        body[find_tail.front().first][find_tail.front().second] = 0;
+        find_tail.push(make_pair(nx, ny));
+        find_tail.pop();
+    }
+    headx = nx; heady = ny;
+    return false;
+}
+//void print_body(){
+//    for(int i = 0 ; i< n ;i++){
+//        for(int j = 0 ; j<n ; j++){
+//            cout << body[i][j];
+//        }
+//        printf("\n");
+//    }
+//    printf("\n");
+//}
+
+int main(){
+    cin >> n;
+    cin >> apple;
+    for(int i = 0 ; i < apple ; i++){
+        int ax, ay;
+        cin >> ax >> ay;
+        board[ax-1][ay-1] = 1;
+    }
+    
+    cin >> mv;
+    memset(time_move, 0, sizeof(time_move));
+    for(int i = 0 ; i < mv ; i++){
+        int x; char c;
+        cin >> x;
+        cin >> c;
+        if(c=='L'){
+            time_move[x] = 1;
+        }else if(c=='D'){
+            time_move[x] = 2;
+        }
+    }
+    
+    body[0][0] = 1;
+    find_tail.push(make_pair(0, 0));
+    while(seconds <= 10000){
+        seconds++;
+        //print_body();
+        if(collide()) break;
+        
+        if(time_move[seconds]==1){
+            dir = dir - 1; if(dir < 0) dir = 3;
+        }else if(time_move[seconds]==2){
+            dir = dir + 1; if(dir > 3) dir = 0;
+        }
+    }
+    cout << seconds;
+    return 0;
+}
