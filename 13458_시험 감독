@@ -1,0 +1,27 @@
+#include <iostream>
+using namespace std;
+
+int n, b, c;
+int room[1000000], head, support, student, total;
+long long answer;
+
+int main(){
+    cin >> n;
+    for(int i = 0 ; i<n ; i++){
+        cin >> room[i];
+    }
+    cin >> b >> c;
+    for(int i = 0 ; i<n ; i++){
+        student = room[i];
+        head = 1;student -= b;
+        if(student < 0)student = 0;
+        
+        support = student/c;
+        
+        total = head + support;
+        total += student%c==0?0:1;
+        answer+= total;
+    }
+    cout << answer;
+    return 0;
+}
