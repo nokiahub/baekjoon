@@ -1,0 +1,60 @@
+//문자열 경우를 중복되지 않게 잘 나누어서 풀이
+
+#include <iostream>
+#include <string>
+using namespace std;
+int main(){
+    string s;
+    cin >> s;
+    int index = 0, answer = 0;
+    while(index<s.size()){
+        if(s[index]=='c'){
+            if(index+1 < s.size()){
+                if(s[index+1]=='=' || s[index+1]=='-'){
+                    answer++; index += 2;
+                }else{
+                    answer++; index += 1;
+                }
+            }else{
+                answer++; index += 1;
+            }
+        }else if(s[index]=='d'){
+            if(index+2 < s.size() && s.substr(index, 3)=="dz="){
+                answer++; index+=3;
+            }else if(index+1 < s.size() && s.substr(index, 2) == "d-"){
+                answer++; index += 2;
+            }else{
+                answer++; index += 1;
+            }
+        }else if(s[index]=='l'){
+            if(index+1<s.size() && s[index+1]=='j'){
+                answer++; index += 2;
+            }else{
+                answer++; index += 1;
+            }
+        }else if(s[index]=='n'){
+            if(index+1<s.size() && s[index+1]=='j'){
+                answer++; index += 2;
+            }else{
+                answer++; index += 1;
+            }
+        }else if(s[index]=='s'){
+            if(index+1<s.size() && s[index+1]=='='){
+                answer++; index += 2;
+            }else{
+                answer++; index += 1;
+            }
+            
+        }else if(s[index]=='z'){
+            if(index+1<s.size() && s[index+1]=='='){
+                answer++; index += 2;
+            }else{
+                answer++; index += 1;
+            }
+        }else{
+            answer++; index += 1;
+        }
+    }
+    cout << answer;
+    return 0;
+}
