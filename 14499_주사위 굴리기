@@ -1,0 +1,75 @@
+//시뮬레이션을 통해 구현
+//굴러간 방향으로 주사위 바닥을 기준으로 계속 주사위를 업데이트 한다.
+//바닥이 0 이면 주사위 바닥의 숫자를 바닥에 복사
+//바닥이 0이 아니면 바닥의 숫자를 주사위 바닥에 복사 후 (중요) 바닥 = 0
+#include <iostream>
+#include <cstring>
+#define DICE_X 4
+#define DICE_Y 3
+#define MAP_S 20
+#define MOVE_S 1000
+using namespace std;
+
+int dice[DICE_X][DICE_Y], map[MAP_S][MAP_S], n, m, x, y, k, order[MOVE_S];
+int floorx =  1, floory = 1, ceilx = 3, ceily = 1;
+int dx[4] = {0, 0, -1, 1}, dy[4] = {1, -1, 0, 0};
+
+void makeit_floor(int d){
+    if(d == 1){
+        int a = dice[1][0], b = dice[3][1];
+        dice[1][0] = dice[1][1]; dice[1][1] = dice[1][2];
+        dice[1][2] = b; dice[3][1] = a;
+        
+    }else if(d == 2){
+        int a = dice[1][2], b = dice[3][1];
+        dice[1][2] = dice[1][1]; dice[1][1] = dice[1][0];
+        dice[3][1] = a; dice[1][0] = b;
+        
+    }else if(d == 3){
+        int c = dice[DICE_X-1][1];
+        for(int i = 2 ; i>=0 ; i--)
+            dice[i+1][1] = dice[i][1];
+        dice[0][1] = c;
+    }else if(d == 4){
+        int c = dice[0][1];
+        for(int i = 1 ; i<DICE_X ; i++)
+            dice[i-1][1] = dice[i][1];
+        dice[DICE_X-1][1] = c;
+    }
+    return;
+}
+
+int get_upside(int index){
+    int dir = order[index]-1;
+    int next_floorx = floorx + dx[dir], next_floory = floory + dy[dir];
+    int nx = x + dx[dir], ny = y + dy[dir];
+    if(nx < 0 || nx >= n || ny < 0 || ny >=m) return -1;
+    
+    if(map[nx][ny] == 0){
+        map[nx][ny] =  dice[next_floorx][next_floory];
+    }else{
+        dice[next_floorx][next_floory] = map[nx][ny];
+        map[nx][ny] = 0;
+    }
+    makeit_floor(dir + 1);
+    x = nx; y = ny;
+    return dice[ceilx][ceily];
+}
+
+int main(){
+    cin >> n >> m >> x >> y >> k;
+    for(int i = 0 ; i<n ; i++){
+        for(int j = 0 ; j<m ; j++){
+            cin >> map[i][j];
+        }
+    }
+    for(int i = 0 ; i<k ; i++){
+        cin >> order[i];
+    }
+    memset(dice, 0, sizeof(dice));
+    for(int i = 0 ; i<k ; i++){
+        int upside = get_upside(i);
+        if(upside!=-1) cout << upside << '\n';
+    }
+    return 0;
+}
