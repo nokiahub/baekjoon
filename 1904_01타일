@@ -1,0 +1,20 @@
+//다이나믹 프로그래밍을 이용하여 푼다.
+//재귀 함수를 사용하면 숫자가 400000정도일때부터 오류가 생김
+
+#include <iostream>
+#include <cstring>
+using namespace std;
+int memo[1000001];
+
+int main(){
+    int n;
+    cin >> n;
+    memo[2] = 2; memo[1] = 1; memo[0] = 0;
+    
+    for(int i = 3 ; i<=n ; i++){
+        memo[i] = memo[i-1] + memo[i-2];
+        memo[i] = memo[i] % 15746;
+    }
+    cout << memo[n] << '\n';
+    return 0;
+}
