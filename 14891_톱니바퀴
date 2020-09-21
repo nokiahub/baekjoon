@@ -1,0 +1,68 @@
+//dfs를 이용
+
+#include <iostream>
+#include <string>
+#include <math.h>
+#include <cstring>
+#define T_S 8
+#define LEFT 6
+#define RIGHT 2
+using namespace std;
+
+int t[T_S][T_S];
+bool visited[T_S];
+
+void spin(int num, int dir){
+    visited[num] = true;
+    int l = t[num][LEFT];
+    int r = t[num][RIGHT];
+    
+    int sr = l, sl = r;
+    if(num-1 >=0) sr = t[num-1][RIGHT];
+    if(num+1 <4) sl = t[num+1][LEFT];
+    
+    if(l != sr && !visited[num-1]) spin(num-1, -dir);
+    if(r != sl && !visited[num+1]) spin(num+1, -dir);
+    
+    int first;
+    if(dir == 1){
+        first = t[num][0];
+        t[num][0] = t[num][T_S-1];
+        for(int i = T_S-2 ; i>=1 ; i--){
+            t[num][i+1] = t[num][i];
+        }
+        t[num][1] = first;
+    }else{
+        first = t[num][0];
+        for(int i = 1 ; i<T_S ; i++){
+            t[num][i-1] = t[num][i];
+        }
+        t[num][T_S-1] = first;
+    }
+    return;
+}
+
+int main(){
+    for(int i = 0 ; i<4 ; i++){
+        string s; cin >> s;
+        for(int j = 0 ; j<T_S ; j++){
+            t[i][j] = s[j]-'0';
+        }
+    }
+    int order, score = 0;
+    cin >> order;
+    for(int i = 0 ; i<order ; i++){
+        int num, dir;
+        cin >> num >> dir;
+        memset(visited, false, sizeof(visited));
+        spin(num-1, dir);
+    }
+    
+    for(int i = 0 ; i<4 ; i++){
+        if(t[i][0]==1){
+            score += pow(2.0, i);
+        }
+    }
+    cout << score <<'\n';
+    return 0;
+}
