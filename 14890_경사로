@@ -1,0 +1,159 @@
+//시뮬레이션 알고리즘 이용
+//경사로를 만든 후, 다음 블록을 지정하는데 내리막길이었을 경우 그 후에 바로 오르막길이 나올 경우를 생각해야 함
+//경사로 길이가 1일 경우, 경사로를 지을 수 있을지 확인하는 for문에 진입이 안되기 때문에 따로 
+
+#include <iostream>
+#include <cstring>
+#define MAX_S 100
+using namespace std;
+
+int a[MAX_S][MAX_S], N, L, answer = 0;
+bool lamp[MAX_S][MAX_S];
+
+void use_lamp(int x, int y, int a, int b){
+    if(x==0){
+        for(int i = a ; i<=b ; i++) lamp[y][i] = true;
+    }
+    if(x==1){
+        for(int i = a ; i<=b ; i++) lamp[i][y] = true;
+    }
+    return;
+}
+int main(){
+    cin >> N >> L;
+    for(int i = 0 ; i<N ; i++){
+        for(int j = 0 ; j<N ; j++){
+            cin >> a[i][j];
+            lamp[i][j] = false;
+        }
+    }
+    
+    for(int i = 0 ; i<N ; i++){
+        int j, height = a[i][0], step = 0, install;
+        while(step < N){
+            j = step;
+            while(a[i][j] == height) j++;
+            //도착한 경우
+            if(j >= N){
+                step = N;
+                 break;
+            }
+            //높이 차이가 1 초과인 경우
+            if(a[i][j] - height > 1 || a[i][j] - height < -1) break;
+            
+            
+            //내려가는 경우
+            if(a[i][j] < height){
+                install = j + L - 1;
+                if(install >= N){
+                    break;
+                }else{
+                    bool even = true;
+                    if(j == install){
+                        if(lamp[i][j]) break;
+                    }
+                    for(int k = j ; k < install ; k++){
+                        if(a[i][k] != a[i][k+1] || lamp[i][k] || lamp[i][k+1]){
+                            even = false; break;
+                        }
+                    }
+                    if(even){
+                        use_lamp(0, i, j, install);
+                        step = install;
+                        height = a[i][j];
+                    }else{
+                        break;
+                    }
+                }
+            }else{ //올라가는 경우
+                install = j - L;
+                if(install < 0){
+                    break;
+                }else{
+                    bool even = true;
+                    if(j-1 == install){
+                        if(lamp[i][j-1]) break;
+                    }
+                    for(int k = j - 1 ; k > install ; k--){
+                        if(a[i][k] != a[i][k-1] || lamp[i][k] || lamp[i][k-1]){
+                            even = false; break;
+                        }
+                    }
+                    if(even){
+                        use_lamp(0, i, install, j-1);
+                        step = j;
+                        height = a[i][step];
+                    }else{
+                        break;
+                    }
+                }
+            }
+        }
+        if(step >= N) answer++;
+    }
+    memset(lamp, false, sizeof(lamp));
+
+    for(int i = 0 ; i<N ; i++){
+        int j, height = a[0][i], step = 0, install;
+        while(step < N){
+            j = step; install = 0;
+            while(a[j][i] == height) j++;
+            if(j >= N){
+                step = N;
+                 break;
+            }
+            if(a[j][i] - height > 1 || a[j][i] - height < -1) break;
+            
+            
+            //내리막길
+            if(a[j][i] < height){
+                install = j + L - 1;
+                if(install >= N){
+                    break;
+                }else{
+                    bool even = true;
+                    if(j == install){
+                        if(lamp[j][i]) break;
+                    }
+                    for(int k = j ; k < install ; k++){
+                        if(a[k][i] != a[k+1][i] || lamp[k][i] || lamp[k+1][i]){
+                            even = false; break;
+                        }
+                    }
+                    if(even){
+                        use_lamp(1, i, j, install);
+                        step = install;
+                        height = a[step][i];
+                    }else{
+                        break;
+                    }
+                }
+            }else{
+                install = j - L;
+                if(install < 0){
+                    break;
+                }else{
+                    bool even = true;
+                    if(j-1 == install){
+                        if(lamp[j-1][i]) break;
+                    }
+                    for(int k = j - 1 ; k > install ; k--){
+                        if(a[k][i] != a[k-1][i] || lamp[k][i] || lamp[k-1][i]){
+                            even = false; break;
+                        }
+                    }
+                    if(even){
+                        use_lamp(1, i, install, j-1);
+                        step = j;
+                        height = a[step][i];
+                    }else{
+                        break;
+                    }
+                }
+            }
+        }
+        if(step >= N) answer++;
+    }
+    printf("%d\n", answer);
+    return 0;
+}
