@@ -1,0 +1,33 @@
+#include <iostream>
+#include <cstring>
+#define SITE 30
+using namespace std;
+int cache[SITE][SITE], arr[SITE][SITE], n, m;
+
+int get_bridge(int e, int w){
+    if(e==n-1) return 1;
+    
+    int &ret = cache[e][w];
+    if(ret != -1) return ret;
+    
+    ret = 0;
+    for(int i = w+1 ; i<m ; i++){
+        ret += get_bridge(e+1, i);
+    }
+    return ret;
+}
+
+int main(){
+    int t;
+    cin >> t;
+    while(t--){
+        cin >> n >> m;
+        memset(cache, -1, sizeof(cache));
+        int answer = 0;
+        for(int i = 0 ; i<m ; i++){
+            answer += get_bridge(0, i);
+        }
+        cout << answer << '\n';
+    }
+    return 0;
+}
