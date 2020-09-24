@@ -1,0 +1,62 @@
+//disjoint set을 사용
+//getParent 최적화 : 경로 압축, Union 최적화 : union by rank
+
+#include <iostream>
+using namespace std;
+int parent[201], treerank[201], map[201][201];
+
+int getParent(int a){
+    if(a == parent[a]) return a;
+    return parent[a] = getParent(parent[a]);
+}
+
+void Union(int a, int b){
+    int parentA = getParent(a);
+    int parentB = getParent(b);
+    
+    if(parentA == parentB) return;
+    
+    if(treerank[parentA] < treerank[parentB]){
+        parent[parentA] = parentB;
+    }else{
+        parent[parentB] = parentA;
+    }
+    if(treerank[parentA] == treerank[parentB]){
+        treerank[parentA]++;
+    }
+}
+
+bool find(int a, int b){
+    int parentA = getParent(a);
+    int parentB = getParent(b);
+    
+    if(parentA == parentB) return true;
+    return false;
+    
+}
+    
+int main(){
+    int n, m;
+    cin >> n >> m;
+    for(int i = 1 ; i<=n ; i++) parent[i] = i;
+    
+    for(int i = 0 ; i<n ; i++){
+        for(int j = 0 ; j<n ; j++){
+            int connect;
+            cin >> connect;
+            if(connect == 1){
+                Union(i+1, j+1);
+            }
+        }
+    }
+    string answer = "YES";
+    int start, city;
+    cin >> start;
+    
+    for(int i = 2 ; i<=m ; i++){
+        cin >> city;
+        if(!find(start, city))answer = "NO";
+    }
+    cout << answer;
+    return 0;
+}
