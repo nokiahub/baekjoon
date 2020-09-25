@@ -1,0 +1,73 @@
+//힙을 사용하여 다익스트라 알고리즘을 사용
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#define V_S 20001
+#define INF 987654321
+using namespace std;
+
+int v, e, start;
+vector <pair<int, int>> a[V_S];
+int d[V_S];
+
+struct compare{
+    bool operator()(pair<int, int> &a, pair <int, int> &b){
+        return a.second > b.second;
+    }
+};
+
+void dijkstra(int x){
+    d[x] = 0;
+    priority_queue<pair<int, int>, vector<pair<int, int>>, compare> pq;
+    pq.push(make_pair(start, 0));
+    
+    while(!pq.empty()){
+        int current = pq.top().first;
+        int distance = pq.top().second;
+        pq.pop();
+        
+        if(distance > d[current]) continue;
+        
+        for(int i = 0 ; i <a[current].size() ; i++){
+            int next = a[current][i].first;
+            int nextDistance = a[current][i].second;
+            
+            if(d[next] > distance + nextDistance){
+                d[next] = distance + nextDistance;
+                pq.push(make_pair(next, distance + nextDistance));
+            }
+        }
+    }
+}
+
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+    
+    cin >> v >> e;
+    cin >> start;
+    for(int i = 0 ; i<=v ; i++) d[i] = INF;
+    
+    for(int i = 0 ; i<e ; i++){
+        int u, v, w;
+        cin >> u >> v >> w;
+        a[u].push_back(make_pair(v, w));
+    }
+    dijkstra(start);
+    
+    for(int i = 1 ; i<=v ; i++){
+        if(i==start){
+            printf("0\n");
+            continue;
+        }
+        if(d[i]==INF){
+            printf("INF\n");
+        }else{
+            printf("%d\n", d[i]);
+        }
+    }
+    return 0;
+}
