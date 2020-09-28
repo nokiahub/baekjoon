@@ -1,0 +1,118 @@
+//시뮬레이션을 이용
+//camdir에 초기 카메라 방향 설정 
+//각 카메라에 해당하는 카메라의 좌표와 type을 설정
+//각 카메라의 회전을 brute force로 구한다. 각 카메라의 방향은 dir 배열에 저장한다.
+//paint_map 구현을 통해 각 상황마다 회전하여 감시할 수 있는 곳을 -1로 한다. (미리 brute force로 구한 dir 배열을 참고)
+//모든 카메라 감시 후 0의 갯수의 합 중 최소를 구한다.
+
+#include <iostream>
+#include <vector>
+#define M_S 8
+#define C_S 5
+#define D_S 4
+#define INF 1000
+using namespace std;
+
+int n, m, a[M_S][M_S], dir[M_S], unwatch = INF;
+int dx[D_S] = {-1, 0, 1, 0}, dy[D_S] = {0, 1, 0, -1};
+bool camdir[C_S][D_S] = {{false, true, false, false},
+    {false, true, false, true},
+    {true, true, false, false},
+    {true, true, false, true},
+    {true, true, true, true}};
+
+struct Camera{
+    int x;
+    int y;
+    int type;
+};
+vector <Camera> cam;
+
+int map[M_S][M_S];
+
+void paint_map(int x, int y, int type, int direc){
+    int start = direc, k = 0;
+
+    while(k < 4){
+        int index = start + k;
+        if(index > 3) index -= 4;
+        
+        bool watch = camdir[type][index];
+        if(!watch){
+            k++;
+            continue;
+        }
+        
+        int nx =  x + dx[k], ny = y + dy[k]; 
+        while(map[nx][ny] != 6 && nx >=0 && nx < n && ny >=0 && ny < m){
+            map[nx][ny] = -1;
+            nx = nx + dx[k];
+            ny = ny + dy[k];
+        }
+        k++;
+    }
+    return;
+}
+
+int get_area(){
+    for(int i = 0 ; i < n ; i++)
+        for(int j = 0 ; j < m ; j++)
+            map[i][j] = a[i][j];
+    
+    //paint map
+    for(int i = 0 ; i<cam.size() ; i++){
+        int x = cam[i].x;
+        int y = cam[i].y;
+        int type = cam[i].type;
+        int direc = dir[i];
+        paint_map(x, y, type, direc);
+    }
+   
+    int ret = 0;
+    for(int i = 0 ; i < n ; i++){
+        for(int j = 0 ; j < m ; j++){
+            if(map[i][j] == 0) ret++;
+        }
+    }
+    return ret;
+}
+
+void comb(int index){
+    if(index == cam.size()){
+        int area = get_area();
+       // printf("%d\n", area);
+        if(area < unwatch) unwatch = area;
+        
+//        for(int i = 0 ; i < n ; i++){
+//            for(int j = 0 ; j < m ; j++){
+//                printf("%d ", map[i][j]);
+//            }
+//            printf("\n");
+//        }
+        
+        return;
+    }
+    
+    for(int i = 0 ; i < D_S ; i++){
+        dir[index] = i;
+        comb(index + 1);
+    }
+    return;
+}
+
+int main(){
+    cin >> n >> m;
+    for(int i = 0 ; i < n ; i++){
+        for(int j = 0 ; j < m ; j++){
+            cin >> a[i][j];
+            if(a[i][j] >= 1 && a[i][j] <= 5){
+                Camera c;
+                c.x = i; c.y = j; c.type = a[i][j]-1;
+                cam.push_back(c);
+            }
+        }
+    }
+    comb(0);
+    cout << unwatch;
+    return 0;
+}
