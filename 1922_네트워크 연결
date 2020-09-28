@@ -1,0 +1,80 @@
+//Edge 구조체를 이용하여 edge들을 입력받는다.
+//우선순위 큐를 이용하여 가장 cost가 적은 edge순으로 정렬한다.
+//Disjoint set 과 크루스칼 알고리즘을 이용하여 최소 비용을 찾는다.
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#define MAX_N 1001
+using namespace std;
+
+struct Edge{
+    int u;
+    int v;
+    int cost;
+};
+
+struct compare{
+    bool operator()(Edge a, Edge b){
+        return a.cost > b.cost;
+    }
+};
+
+priority_queue<Edge, vector<Edge>, compare> edge;
+int n, m, parent[MAX_N], treerank[MAX_N];
+
+int get_parent(int x){
+    if(parent[x] == x) return x;
+    return parent[x] = get_parent(parent[x]);
+}
+
+void Union(int a, int b){
+    a = get_parent(a);
+    b = get_parent(b);
+    
+    if(a==b) return;
+    
+    if(treerank[a] > treerank[b]){
+        parent[b] = a;
+    }else{
+        parent[a] = b;
+    }
+    
+    if(treerank[a] == treerank[b]){
+        treerank[b]++;
+    }
+    return;
+}
+
+int main(){
+    cin >> n;
+    cin >> m;
+    for(int i = 1 ; i<=n ; i++) parent[i] = i;
+    
+    for(int i = 0 ; i<m ; i++){
+        int a, b, c;
+        cin >> a >> b >> c;
+        Edge e;
+        e.u = a; e.v = b;
+        e.cost = c;
+        edge.push(e);
+    }
+    
+    int k = n - 1, cnt = 0, min_cost = 0;
+    
+    while(cnt < k){
+        Edge front = edge.top();
+        edge.pop();
+        
+        int a = front.u;
+        int b = front.v;
+        int c = front.cost;
+        
+        if(get_parent(a) == get_parent(b)) continue;
+        min_cost += c;
+        Union(a, b);
+        cnt++;
+    }
+    cout << min_cost;
+    return 0;
+}
