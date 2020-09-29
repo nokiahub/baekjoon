@@ -1,0 +1,80 @@
+// 최소 스패닝 트리에서 가장 값이 많이 나가는 edge만 없으면 됀다. == n-2만큼 반복한다 (보통 mst 는 n-1만큼 반복)
+
+#include <iostream>
+#include <queue>
+#define HOUSE 100001
+using namespace std;
+
+int n, m;
+
+struct Edge{
+    int u;
+    int v;
+    int cost;
+};
+
+struct compare{
+    bool operator()(Edge a, Edge b){
+        return a.cost > b.cost;
+    }
+};
+
+priority_queue <Edge, vector<Edge>, compare> edge;
+int parent[HOUSE], treerank[HOUSE];
+
+int find(int x){
+    if(parent[x] == x) return x;
+    return parent[x] = find(parent[x]);
+}
+
+void Union(int a, int b){
+    a = find(a);
+    b = find(b);
+    
+    if(a == b) return;
+    
+    if(treerank[a] > treerank[b]){
+        parent[b] = a;
+    }else{
+        parent[a] = b;
+    }
+    
+    if(treerank[a] == treerank[b]){
+        treerank[b] += 1;
+    }
+    return;
+}
+
+
+int kruskal(){
+    int cnt = 0, totalCost = 0;
+    while(cnt < n-2){
+        Edge e = edge.top();
+        edge.pop();
+        int a = e.u, b = e.v, c = e.cost;
+        if(find(a) != find(b)){
+            Union(a, b);
+            totalCost += c;
+            cnt++;
+        }
+    }
+    return totalCost;
+}
+
+int main(){
+    cin >> n >> m;
+    for(int i = 1 ; i<=n ; i++)parent[i] = i;
+    for(int i = 0 ; i < m ; i++){
+        int a, b, c;
+        cin >> a >> b >> c;
+        Edge tmp;
+        tmp.u = a;
+        tmp.v = b;
+        tmp.cost = c;
+        edge.push(tmp);
+    }
+    
+    int answer = kruskal();
+    cout << answer;
+    return 0;
+}
