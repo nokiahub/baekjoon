@@ -1,0 +1,29 @@
+//수학적 감이 필요함
+//8진수를 2진수로 표현하려면 8진수 1 칸 => 2진수 3 칸으로 표현할 수 있음
+
+
+#include <iostream>
+#include <string>
+#include <string.h>
+#define NUM_S 10
+using namespace std;
+
+string memo[NUM_S] = {"000", "001", "010", "011", "100", "101", "110", "111"};
+string memo1[NUM_S] = {"0", "1", "10", "11", "100", "101", "110", "111"};
+int main(){
+    char eight[500000];
+    scanf("%s", eight);
+    
+    int n = strlen(eight);
+    for(int i = 0 ; i < n ; i++){
+        int index = eight[i]-'0';
+        string num = memo[index];
+        
+        if(i==0){
+            cout << memo1[index];
+        }else{
+            cout << memo[index];
+        }
+    }
+    return 0;
+}
