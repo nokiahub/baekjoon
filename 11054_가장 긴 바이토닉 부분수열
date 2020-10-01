@@ -1,0 +1,57 @@
+// dynamic(이 전에 포함된 수, 현재 수, 증가 = 0, 감소 = 1) 
+
+#include <iostream>
+#include <cstring>
+#define N_S 1001
+#define INF 1001
+using namespace std;
+
+int n, A[N_S], cache[N_S][N_S][2];
+
+int dynamic(int before, int index, int down){
+    
+    if(index == n){
+        if(A[before] < A[index] && down == 0) return 1;
+        if(A[before] > A[index] && down == 1) return 1;
+        return 0;
+    }
+    
+    int &ret = cache[before][index][down];
+    if(ret != -1) return ret;
+    
+    ret = 0;
+    
+    // index 수 포함
+    //down == 0이면 다음 수가 클 때 down = 0  다음 수가 작을 때 down = 1
+    //down ==1 이면 다음수가 크면 x, 다음 수가 작으면 down =1
+    if(A[before] < A[index]){
+        if(down == 0){
+            ret = max(ret, dynamic(index, index + 1, 0) + 1);
+        }
+    }
+
+    if(A[before] > A[index]){
+        ret = max(ret, dynamic(index, index + 1, 1) + 1);
+    }
+    
+    //index 수 미 포함
+    ret = max(ret, dynamic(before, index + 1, down));
+    return ret;
+}
+
+int main(){
+    int bitonic1, bitonic2, answer;
+    memset(cache, -1, sizeof(cache));
+    
+    cin >> n;
+    for(int i = 1 ; i<= n ; i++) cin >> A[i];
+
+    A[0] = 0;
+    bitonic1 =dynamic(0, 1, 0);
+    A[0] = INF;
+    bitonic2 = dynamic(0, 1, 1);
+    
+    answer = bitonic1 > bitonic2 ? bitonic1 : bitonic2;
+    cout << answer;
+    return 0;
+}
