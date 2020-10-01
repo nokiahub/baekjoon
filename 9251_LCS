@@ -1,0 +1,51 @@
+//s1[index1]과 같은 문자가 s2에 존재하면 +1 하고 다음 dynamic(index1 + 1, next + 1) next는 s2 위치
+//존재하지 않으면 index1 미포함 dynamic(index1+1, index2)
+
+#include <iostream>
+#include <string>
+#include <cstring>
+#define MAX 1000
+using namespace std;
+
+string s1, s2;
+int n, m, cache[MAX][MAX];
+
+int dynamic(int index1, int index2){
+    
+    if(index1 == n) return 0;
+    
+    int &ret = cache[index1][index2];
+    if(ret != -1) return ret;
+    
+    ret = 0;
+    //index1 포함
+    bool match = false;
+    int next = 0;
+    for(int i = index2 ; i<m ; i++){
+        if(s1[index1] == s2[i]){
+            match = true;
+            next = i;
+            break;
+        }
+    }
+    if(match){
+        ret = max(ret, dynamic(index1 + 1, next + 1) + 1);
+    }
+    
+    //index1 포함x
+    ret = max(ret, dynamic(index1 + 1, index2));
+    
+    return ret;
+}
+
+
+int main(){
+    memset(cache, -1, sizeof(cache));
+    cin >> s1 >> s2;
+    n = s1.size();
+    m = s2.size();
+    
+    int answer = dynamic(0, 0);
+    cout << answer;
+    return 0;
+}
