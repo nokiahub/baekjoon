@@ -1,0 +1,52 @@
+//현재 진행된 right side 값과 결정해야 하는 right side에 따라 dynamic을 진행한다.
+//진행된 right 값 보다 크면 cut & uncut 둘다 진행
+//진행된 right 값 보다 작으면 교차가 존재하므로 반드시 cut만 
+
+#include <iostream>
+#include <cstring>
+#include <vector>
+#include <algorithm>
+#define MAX 501
+#define INF 987654321
+using namespace std;
+
+int n, cache[MAX][MAX];
+vector <pair<int, int>> edge;
+
+bool cmp(pair<int, int> a, pair<int, int> b){
+    return a.first < b.first;
+}
+
+int dynamic(int index, int right){
+    if(index == n) return 0;
+    
+    int &ret = cache[index][right];
+    if(ret != -1) return ret;
+    
+    ret = INF;
+    
+    //cut
+    ret = min(ret,dynamic(index + 1, right) + 1);
+    
+    if(right < edge[index].second){
+        //uncut
+        ret = min(ret, dynamic(index + 1, edge[index].second));
+    }
+    return ret;
+}
+
+int main(){
+    int answer = 0;
+    memset(cache, -1, sizeof(cache));
+    cin >> n;
+    for(int i = 0 ; i < n ; i++){
+        int a, b;
+        cin >> a >> b;
+        edge.push_back(make_pair(a, b));
+    }
+    sort(edge.begin(), edge.end(), cmp);
+    
+    answer = dynamic(0, 0);
+    cout << answer;
+    return 0;
+}
