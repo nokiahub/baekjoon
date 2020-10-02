@@ -1,0 +1,37 @@
+#include <iostream>
+#include <stack>
+using namespace std;
+
+
+bool balance(string sentence){
+    stack <int> st;
+    int index = 0;
+    
+    while(sentence[index] != '.'){
+        if(sentence[index] == '('){
+            st.push(1);
+        }else if(sentence[index] == ')'){
+            if(st.empty() || st.top() != 1) return false;
+            st.pop();
+        }else if(sentence[index] == '['){
+            st.push(2);
+        }else if(sentence[index] == ']'){
+            if(st.empty() || st.top() != 2) return false;
+            st.pop();
+        }
+        index++;
+    }
+    if(!st.empty()) return false;
+    return true;
+}
+
+int main(){
+    string s;
+    while(true){
+        getline(cin, s);
+        if(s==".") break;
+        printf("%s\n", balance(s) ? "yes" : "no");
+        
+    }
+    return 0;
+}
