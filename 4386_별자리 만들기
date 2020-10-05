@@ -1,0 +1,173 @@
+//크루스칼 
+//edge.size()만큼 반복문 도는 이유 = 사이클이 발생해서 해당 edge를 포함할 수 없는 경우가 있기 때문에 n - 1 만큼 반복문 돌리면 안됨
+//edge.size()만큼 돌리거나 !edge.empty() 조건을 걸고 반복문을 돌려야 한다.
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <math.h>
+#include <cmath>
+using namespace std;
+
+int n, parent[100];
+vector <pair<double, double>> v;
+
+struct Edge{
+    int u;
+    int v;
+    double cost;
+};
+
+struct compare{
+    bool operator()(Edge a, Edge b){
+        return a.cost > b.cost;
+    }
+};
+
+priority_queue<Edge, vector<Edge>, compare> edge;
+
+double get_distance(pair<int, int> a, pair <int, int> b){
+    double x1 = a.first, x2 = b.first;
+    double y1 = a.second, y2 = b.second;
+    
+    double ret = pow(x2 - x1, 2) + pow((y2 - y1), 2);
+    ret = sqrt(ret);
+    return ret;
+}
+
+int find(int x){
+    if(parent[x] == x) return x;
+    return parent[x] = find(parent[x]);
+}
+
+void Union(int a, int b){
+    a = find(a);
+    b = find(b);
+    
+    if(a != b){
+        parent[b] = a;
+    }
+    return;
+}
+
+int main(){
+    cin >> n;
+    for(int i = 0 ; i< n ; i++){
+        double x, y;
+        cin >> x >> y;
+        v.push_back(make_pair(x, y));
+    }
+    
+    for(int i = 0 ; i < n - 1 ; i++){
+        for(int j = i + 1 ; j < n ; j++){
+            double btw = get_distance(v[i], v[j]);
+            Edge tmp;
+            tmp.u = i;
+            tmp.v = j;
+            tmp.cost = btw;
+            edge.push(tmp);
+        }
+    }
+    
+    for(int i = 0 ; i< n ; i++) parent[i] = i;
+    double answer = 0.0;
+    
+   // printf("%d %d\n", edge.size(), n-1);
+    
+    for(int i = 0 ; i <edge.size() ; i++){
+        Edge current = edge.top();
+        edge.pop();
+
+        int a = current.u;
+        int b = current.v;
+        double c = current.cost;
+
+        if(find(a) != find(b)){
+            answer += c;
+            Union(a, b);
+        }
+    }
+    printf("%f", answer);
+    return 0;
+}
+
+//프림 알고리즘 풀이
+
+//#include <iostream>
+//#include <vector>
+//#include <queue>
+//#include <cmath>
+//using namespace std;
+//
+//int n;
+//double answer = 0.0;
+//vector <pair<double, double>> v;
+//vector <pair<int, double>> arr[100];
+//double key[100];
+//bool visit[100];
+//
+//struct compare{
+//    bool operator()(int a, int b){
+//        return key[a] > key[b];
+//    }
+//};
+//
+//void prim(){
+//
+//    priority_queue<pair<double, int>> pq;
+//    for(int i = 0 ; i<arr[0].size() ; i++){
+//        int next = arr[0][i].first;
+//        double cost = arr[0][i].second;
+//
+//        pq.push(make_pair(-cost, next));
+//    }
+//    visit[0] = true;
+//
+//    while(!pq.empty()){
+//        int cur = pq.top().second;
+//        double cost = -pq.top().first;
+//        pq.pop();
+//        if(!visit[cur]){
+//            answer += cost;
+//            visit[cur] = true;
+//
+//            for(int i = 0 ; i < arr[cur].size() ; i++){
+//                int next = arr[cur][i].first;
+//                double c = arr[cur][i].second;
+//                if(!visit[next]) pq.push(make_pair(-c, next));
+//            }
+//
+//        }
+//    }
+//    return;
+//}
+//
+//
+//double get_distance(pair<int, int> a, pair <int, int> b){
+//    double x1 = a.first, x2 = b.first;
+//    double y1 = a.second, y2 = b.second;
+//
+//    double ret = pow(x2 - x1, 2) + pow((y2 - y1), 2);
+//    ret = sqrt(ret);
+//    return ret;
+//}
+//int main(){
+//    cin >> n;
+//    for(int i = 0 ; i< n ; i++){
+//        double x, y;
+//        cin >> x >> y;
+//        v.push_back(make_pair(x, y));
+//    }
+//
+//    for(int i = 0 ; i < n - 1 ; i++){
+//        for(int j = i + 1 ; j < n ; j++){
+//            double btw = get_distance(v[i], v[j]);
+//            arr[i].push_back(make_pair(j, btw));
+//            arr[j].push_back(make_pair(i, btw));
+//        }
+//    }
+//    prim();
+//    cout << answer;
+//    return 0;
+//}
+
