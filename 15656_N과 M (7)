@@ -1,0 +1,84 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#define N_S 7
+using namespace std;
+
+int n, m, answer[N_S];
+vector <int> arr;
+bool check[N_S];
+
+void go(int index, int selected, int k){
+    if(selected == k){
+        for(int i = 0 ; i < k ; i++){
+            printf("%d ", arr[answer[i]]);
+        }
+        
+        printf("\n");
+        return;
+    }
+    
+    for(int i = index ; i < n ; i++){
+        answer[selected] = i;
+        go(index, selected + 1, k);
+    }
+
+    return;
+}
+
+
+int main(){
+    cin >> n >> m;
+    for(int i = 0 ; i < n ; i++){
+        int num;
+        cin >> num;
+        arr.push_back(num);
+    }
+    sort(arr.begin(), arr.end());
+    go(0, 0, m);
+    return 0;
+}
+
+
+#include <iostream>
+//#include <vector>
+//#include <algorithm>
+//#define N_S 7
+//using namespace std;
+//
+//int n, m;
+//vector <int> arr;
+//bool check[N_S];
+//
+//void go(int index, int selected, int k, vector <int> container){
+//    if(selected == k){
+//        for(int i = 0 ; i < container.size() ; i++){
+//            printf("%d ", arr[container[i]]);
+//        }
+//        
+//        printf("\n");
+//        return;
+//    }
+//    
+//    for(int i = index ; i < n ; i++){
+//        container.push_back(i);
+//        go(index, selected + 1, k, container);
+//        container.pop_back();
+//    }
+//
+//    return;
+//}
+//
+//
+//int main(){
+//    cin >> n >> m;
+//    for(int i = 0 ; i < n ; i++){
+//        int num;
+//        cin >> num;
+//        arr.push_back(num);
+//    }
+//    sort(arr.begin(), arr.end());
+//    vector <int> container;
+//    go(0, 0, m, container);
+//    return 0;
+//}
