@@ -1,0 +1,41 @@
+//연결 요소 중, 정점이 1개일 경우도 있다.
+
+#include <iostream>
+#include <vector>
+#define N_S 1001
+using namespace std;
+
+int n, m, visited[N_S], answer = 0;
+vector <int> a[N_S];
+
+void dfs(int x){
+    visited[x] = true;
+    
+    for(int i = 0 ; i < a[x].size() ; i++){
+        int next = a[x][i];
+        if(!visited[next]){
+            dfs(next);
+        }
+    }
+    return;
+}
+
+int main(){
+    cin >> n >> m;
+    for(int i = 0 ; i < m ; i++){
+        int u, v;
+        cin >> u >> v;
+        a[u].push_back(v);
+        a[v].push_back(u);
+    }
+    
+    for(int i = 1 ; i <=n ; i++){
+        if(!visited[i]){
+            answer++;
+            dfs(i);
+        }
+    }
+    
+    cout << answer;
+    return 0;
+}
