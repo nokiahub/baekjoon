@@ -1,0 +1,54 @@
+#include <iostream>
+#include <cstring>
+#include <queue>
+#define N_S 300
+using namespace std;
+
+int board[N_S][N_S],step[N_S][N_S], t, I, startx, starty, destx, desty;
+int dx[8] = {-2, -1, 1, 2, 2, 1, -1, -2}, dy[8] = {1, 2, 2, 1, -1, -2, -2, -1};
+bool visited[N_S][N_S];
+
+int bfs(){
+    queue <pair<int, int>> q;
+    memset(visited, false, sizeof(visited));
+    memset(step, 0, sizeof(step));
+    
+    q.push(make_pair(startx, starty));
+    visited[startx][starty] = true;
+    
+    while(!q.empty()){
+        int x = q.front().first;
+        int y = q.front().second;
+        q.pop();
+        if(x == destx && y == desty){
+            return step[x][y];
+        }
+        
+        for(int i = 0 ; i < 8 ; i++){
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+            
+            if(nx >= 0 && nx < I && ny >= 0 && ny < I){
+                if(!visited[nx][ny]){
+                    step[nx][ny] = step[x][y] + 1;
+                    visited[nx][ny] = true;
+                    q.push(make_pair(nx, ny));
+                }
+            }
+        }
+        
+    }
+    return -1;
+}
+
+int main(){
+    cin >> t;
+    while(t--){
+        cin >> I;
+        cin >> startx >> starty;
+        cin >> destx >> desty;
+        int min_move = bfs();
+        cout << min_move << '\n';
+    }
+    return 0;
+}
