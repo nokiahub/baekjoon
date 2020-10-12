@@ -1,0 +1,86 @@
+//드래곤 커브를 그릴 때 진행한 방향의 역 순으로 시계방향으로 90도 꺾은 뒤 대칭이동 (==90도 3번 회전) 하며 점을 찍어간다.
+//4 모서리 모두 드래곤 커브에 해당하면 square++ 한다.
+
+#include <iostream>
+#include <vector>
+#define N_S 101
+using namespace std;
+
+int N, arr[N_S][N_S], dy[4] = {-1, 0, 1, 0}, dx[4] = {0, 1, 0, -1};
+
+int reverse_direction(int current){
+    int next = current, flip = 3;
+    while(flip--){
+        next++;
+        if(next > 3) next = 0;
+    }
+    return next;
+}
+
+void draw_dragon(int x, int y, int d, int g){
+    
+    arr[y][x] = 1;
+    
+    int level = 0;;
+    vector <int> dir;
+    vector <pair<int, int>> trace;
+    
+    trace.push_back(make_pair(y, x));
+    
+    int redirect;
+    
+    if(d == 0){
+        redirect = 1;
+    }else if(d == 1){
+        redirect = 0;
+    }else if(d == 2){
+        redirect = 3;
+    }else{
+        redirect = 2;
+    }
+    
+    dir.push_back(redirect);
+    int cy = y + dy[redirect];
+    int cx = x + dx[redirect];
+    arr[cy][cx] = 1;
+    
+    
+    while(level < g){
+        
+         int dir_s = dir.size();
+        
+        for(int i = 0 ; i < dir_s ; i++){
+            int cd = reverse_direction(dir[dir_s - 1 - i]);
+            
+            int diry = cy + dy[cd];
+            int dirx = cx + dx[cd];
+            arr[diry][dirx] = 1;
+            dir.push_back(cd);
+            
+            cy = diry;
+            cx = dirx;
+        }
+        
+        level++;
+    }
+    return;
+}
+
+int main(){
+    cin >> N;
+    while(N--){
+        int x, y, d, g;
+        cin >> x >> y >> d >> g;
+        draw_dragon(x, y, d, g);
+    }
+    
+    int square  = 0;
+    for(int i = 0 ; i < N_S - 1 ; i++){
+        for(int j = 0 ; j < N_S - 1 ; j++){
+            if(arr[i][j] && arr[i][j + 1] && arr[i + 1][j] && arr[i + 1][j + 1])
+                square++;
+        }
+    }
+    cout << square;
+    return 0;
+}
