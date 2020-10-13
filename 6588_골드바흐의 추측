@@ -1,0 +1,47 @@
+//cin, cout을 사용하면 입출력 시간이걸리지 않도록 해야함
+
+#include <iostream>
+#include <vector>
+#include <cmath>
+#define N_S 1000001
+using namespace std;
+
+bool not_prime[N_S];
+vector <int> primes;
+
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    
+    for(int i = 2 ; i <N_S ; i++){
+        if(not_prime[i] == true) continue;
+        for(int j = 2 * i ; j < N_S ; j += i){
+            not_prime[j] = true;
+        }
+    }
+    
+    for(int i = 3 ; i <N_S ; i++){
+        if(not_prime[i] == false)
+            primes.push_back(i);
+    }
+    
+    while(true){
+        int n;
+        cin >> n;
+        if(n == 0) break;
+        int i;
+        for(i = 0 ; i < primes.size() ; i++){
+            int n1 = primes[i];
+            int n2 = n - n1;
+            if(not_prime[n2] == false){
+                printf("%d = %d + %d\n", n, n1, n2);
+                break;
+            }
+        }
+        if(i == primes.size()){
+            printf("Goldbach's conjecture is wrong.\n");
+        }
+    }
+    return 0;
+}
