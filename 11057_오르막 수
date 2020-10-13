@@ -1,0 +1,36 @@
+#include <iostream>
+#include <cstring>
+#define NUM_S 10
+#define N_S 1001
+#define MOD 10007
+using namespace std;
+
+int N, cache[NUM_S][N_S];
+
+int solve(int prev, int cnt){
+    if(cnt == N){
+        return 1;
+    }
+    
+    int &ret = cache[prev][cnt];
+    if(ret != -1) return ret;
+    
+    ret = 0;
+    for(int i = prev ; i < NUM_S ; i++){
+        ret += solve(i, cnt + 1);
+        ret %= MOD;
+    }
+    return ret;
+}
+
+int main(){
+    cin >> N;
+    int answer = 0;
+    memset(cache, -1 , sizeof(cache));
+    for(int i = 0 ; i < 10 ; i++){
+        answer += solve(i, 1);
+        answer %= MOD;
+    }
+    cout << answer;
+    return 0;
+}
