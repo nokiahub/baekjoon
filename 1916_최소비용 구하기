@@ -1,0 +1,59 @@
+//그래프에 사이클이 존재할 때 dfs로 최단거리를 못구하기 때문에 다익스트라 알고리즘을 써야한다.
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#define N_MAX 1001
+#define INF 10000000001
+using namespace std;
+
+int N, M, A, B;
+long long dist[N_MAX];
+vector <pair<int, int>> connected[N_MAX];
+
+
+long long dijkstra(){
+    for(int i = 1 ; i <= N ; i++) dist[i] = INF;
+    
+    dist[A] = 0;
+    priority_queue <pair<long long, int>> pq;
+    pq.push(make_pair(0, A));
+    
+    while(!pq.empty()){
+        int candidate  = pq.top().second;
+        long long cost = -pq.top().first;
+        pq.pop();
+        
+        if(dist[candidate] < cost) continue;
+        
+        for(int i = 0 ; i < connected[candidate].size() ; i++){
+            
+            int next = connected[candidate][i].second;
+            int next_cost = connected[candidate][i].first;
+            
+            if(cost + next_cost < dist[next]){
+                dist[next] = cost + next_cost;
+                pq.push(make_pair(-dist[next], next));
+            }
+        }
+    }
+
+    return dist[B];
+}
+
+int main(){
+    cin >> N;
+    cin >> M;
+
+    for(int i = 0 ; i < M ; i++){
+        int u, v, c;
+        cin >> u >> v >> c;
+        connected[u].push_back(make_pair(c, v));
+    }
+    
+    
+    cin >> A >> B;
+    long long answer = dijkstra();
+    cout << answer;
+    return 0;
+}
