@@ -1,0 +1,86 @@
+//그,, 시간을 계속 업데이트 해주면서 큐가 다 빌때까지
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#define INF 987654321
+using namespace std;
+
+int A, B, N;
+
+struct Gift{
+    int t;
+    char c;
+    int m;
+};
+
+queue <Gift> blue, red;
+vector <int> ans[2];
+
+int main(){
+    cin >> A >> B >> N;
+    for(int i = 0 ; i < N ; i ++){
+        int ti, mi;
+        char ci;
+        cin >> ti >> ci >> mi;
+        Gift g;
+        g.t = ti;
+        g.c = ci;
+        g.m = mi;
+        if(ci == 'B') blue.push(g);
+        else red.push(g);
+    }
+    
+    int gift_num = 1, cur_t = 0;
+    char cur_c;
+    
+    while(!blue.empty() || !red.empty()){
+        int blue_time, red_time;
+        
+        if(blue.empty()){
+            blue_time = INF;
+        }else{
+            blue_time = blue.front().t;
+        }
+        
+        if(red.empty()){
+            red_time = INF;
+        }else{
+            red_time = red.front().t;
+        }
+    
+        cur_c = blue_time <= red_time ? 'B' : 'R';
+        cur_t = blue_time <= red_time ? blue_time : red_time;
+        
+        int left;
+        if(cur_c == 'B'){
+            left = --blue.front().m;
+            if(left == 0){
+                blue.pop();
+            }else{
+                blue.front().t += A;
+            }
+            ans[0].push_back(gift_num);
+        }else{
+            left = --red.front().m;
+            if(left == 0){
+               red.pop();
+            }else{
+                red.front().t += B;
+            }
+            ans[1].push_back(gift_num);
+        }
+          
+        gift_num++;
+    }
+    
+    
+    for(int i = 0 ; i < 2 ; i++){
+        cout << ans[i].size() <<'\n';
+        for(int j = 0 ; j < ans[i].size() ; j++){
+            cout << ans[i][j] <<' ';
+        }
+        cout <<'\n';
+    }
+    return 0;
+}
