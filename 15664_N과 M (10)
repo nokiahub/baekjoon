@@ -1,0 +1,70 @@
+//모든 답을 저장하는 list 벡터에 해당 수열이 존재하면 단순히 추가하지 않는다.
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#define N_S 9
+using namespace std;
+
+int n, m, arr[N_S];
+bool visited[N_S];
+struct answer{
+    int el[N_S];
+};
+vector <answer> list;
+
+bool has(answer tmp){
+    int i, j;
+    for(i = 0 ; i < list.size() ; i++){
+        for(j = 0 ; j < m ; j++){
+            if(tmp.el[j] != list[i].el[j]) break;
+        }
+        if(j == m) return true;
+    }
+    return false;
+}
+
+void solve(int index, int selected){
+    
+    if(selected == m){
+        answer tmp;
+        int j = 0;
+        for(int i = 0 ; i < n ; i++){
+            if(visited[i]){
+                tmp.el[j] = arr[i];
+                j++;
+            }
+        }
+        if(!has(tmp))
+            list.push_back(tmp);
+        return;
+    }
+    
+    if(index == n) return;
+    
+    visited[index] = true;
+    solve(index + 1, selected + 1);
+    visited[index] = false;
+    solve(index + 1, selected);
+
+    return;
+}
+
+int main(){
+    cin >> n >> m;
+    for(int i = 0 ; i < n ; i++){
+        cin >> arr[i];
+    }
+    
+    sort(arr, arr + n);
+    solve(0, 0);
+    
+    for(int i = 0 ; i < list.size() ; i++){
+        for(int j = 0 ; j < m ; j++){
+            printf("%d ", list[i].el[j]);
+        }
+        printf("\n");
+    }
+    
+    return 0;
+}
