@@ -1,0 +1,74 @@
+#include <iostream>
+using namespace std;
+
+string s, answer ="";
+int n, index1, index2;
+
+void compareResult(int split1, int split2){
+    string result = "";
+    for(int i = split1 ; i >= 0 ; i--){
+        result += s[i];
+    }
+    for(int i = split2 ; i >= split1 + 1 ; i--){
+        result += s[i];
+    }
+    for(int i = n - 1 ; i >= split2 + 1 ; i--){
+        result += s[i];
+    }
+    
+    if(answer == ""){
+        answer = result;
+    }else{
+        for(int i = 0 ; i < n ; i++){
+            if(answer[i] > result[i]){
+                answer = result;
+                return;
+            }else if(answer[i] < result[i]){
+                return;
+            }
+        }
+    }
+    return;
+}
+
+int findIndex(int start, int end){
+    int minValue = s[start], minIndex = start;
+    for(int i = start + 1 ; i <= end ; i++){
+        if(minValue > s[i]){
+            minValue = s[i];
+            minIndex = i;
+        }
+    }
+    return minIndex;
+}
+
+void splitString(int start, int end){
+    int index;
+    
+    if(!start){
+        index = findIndex(start, end - 2);
+        for(int i = 0 ; i < end - 1; i++){
+            if(s[index] == s[i]){
+                splitString(i + 1, end);
+            }
+        }
+    }else{
+        index = findIndex(start, end - 1);
+        for(int i = start ; i < end ; i++){
+            if(s[index] == s[i]){
+                compareResult(start - 1, i);
+            }
+        }
+    }
+    
+    return;
+}
+
+int main(){
+    cin >> s;
+    n = s.size();
+    
+    splitString(0, n - 1);
+    cout << answer;
+    return 0;
+}
