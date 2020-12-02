@@ -1,0 +1,55 @@
+#include <iostream>
+#define DICE_NUM 3
+#define MAX_SUM 81
+using namespace std;
+
+int s[DICE_NUM], sum[MAX_SUM];
+bool check[DICE_NUM];
+
+void dfs(int a, int b, int c){
+    if(check[0] && check[1] && check[2]){
+        sum[a + b + c] += 1;
+        return;
+    }
+    
+    if(!check[0]){
+        for(int i = 1 ; i <= s[0] ; i++){
+            check[0] = true;
+            dfs(i, b, c);
+        }
+        check[0] = false;
+    }
+    
+    if(!check[1]){
+        for(int i = 1 ; i <= s[1] ; i++){
+            check[1] = true;
+            dfs(a, i, c);
+        }
+        check[1] = false;
+    }
+    
+    if(!check[2]){
+        for(int i = 1 ; i <= s[2] ; i++){
+            check[2] = true;
+            dfs(a, b, i);
+        }
+        check[2] =false;
+    }
+}
+
+
+int main(){
+    cin >> s[0] >> s[1] >> s[2];
+    dfs(0, 0, 0);
+    
+    int maxValue = 0, index = 0;
+    for(int i = 1 ; i <= MAX_SUM ; i++) {
+        if(sum[i] > maxValue) {
+            maxValue = sum[i];
+            index = i;
+        }
+    }
+    
+    cout << index;
+    return 0;
+}
