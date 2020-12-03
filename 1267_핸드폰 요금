@@ -1,0 +1,37 @@
+#include <iostream>
+#define N_S 20
+using namespace std;
+
+int n, history[N_S], cost1 = 0, cost2 = 0;
+
+int getCost(int dur, int time, int cost){
+    int ret = ((dur / time) + 1) * cost;
+    
+    return ret;
+}
+
+int main(){
+    cin >> n;
+    for(int i = 0 ; i < n ; i++){
+        cin >> history[i];
+    }
+    
+    for(int i = 0 ; i < n ; i++){
+        cost1 += getCost(history[i], 30, 10);
+    }
+    
+    for(int i = 0 ; i < n ; i++){
+        cost2 += getCost(history[i], 60, 15);
+    }
+    
+    if(cost1 < cost2){
+        printf("Y %d", cost1);
+        
+    }else if(cost2 < cost1){
+        printf("M %d", cost2);
+    }else{
+        printf("Y M %d", cost1);
+    }
+    
+    return 0;
+}
