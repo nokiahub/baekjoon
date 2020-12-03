@@ -1,0 +1,38 @@
+#include <iostream>
+#include <stack>
+using namespace std;
+
+int n, p, answer = 0;
+stack <int> st[6];
+
+int main(){
+    cin >> n >> p;
+    for(int i = 0 ; i < n ; i++){
+        int stringNum, fretNum;
+        cin >> stringNum >> fretNum;
+        
+        if(st[stringNum - 1].empty()){
+            answer++;
+            st[stringNum - 1].push(fretNum);
+            continue;
+        }
+        
+        int prev = st[stringNum - 1].top();
+        
+        if(prev < fretNum){
+            answer++;
+            st[stringNum - 1].push(fretNum);
+        }else if(prev > fretNum){
+            while(!st[stringNum - 1].empty() && st[stringNum - 1].top() > fretNum){
+                answer++;
+                st[stringNum - 1].pop();
+            }
+            if(st[stringNum - 1].empty() || st[stringNum - 1].top() < fretNum){
+                answer++;
+                st[stringNum - 1].push(fretNum);
+            }
+        }
+    }
+    cout << answer;
+    return 0;
+}
