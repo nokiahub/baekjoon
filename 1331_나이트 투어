@@ -1,0 +1,60 @@
+#include <iostream>
+#define MAX_MOVE 36
+using namespace std;
+
+string pos;
+int x = -1, y = -1, cx, cy, startx, starty;
+int dx[8] = {-2, -1, 1, 2, 2, 1, -1, -2}, dy[8] = {1, 2, 2, 1, -1, -2, -2, -1};
+bool visited[6][6];
+
+bool isKnightMove(){
+    for(int i = 0 ; i < 8 ; i++){
+        if(x + dx[i] == cx && y + dy[i] == cy){
+            return true;
+        }
+    }
+    return false;
+}
+
+int main(){
+    
+    for(int i = 0 ; i < MAX_MOVE ; i++){
+        cin >> pos;
+        cx = pos[1] - '1';
+        cy = pos[0] - 65;
+        
+        if(visited[cx][cy]){
+            printf("Invalid");
+            return 0;
+        }
+        
+        visited[cx][cy] = true;
+        
+        if(x == -1 && y == -1){
+            startx = cx;
+            starty = cy;
+            x = cx;
+            y = cy;
+            continue;
+        }
+        
+        if(!isKnightMove()){
+            printf("Invalid");
+            return 0;
+        }
+        
+        x = cx;
+        y = cy;
+    }
+    
+    cx = startx;
+    cy = starty;
+    
+    if(isKnightMove()){
+        printf("Valid");
+    }else{
+        printf("Invalid");
+    }
+    
+    return 0;
+}
