@@ -1,0 +1,55 @@
+//건물을 동시에 지을 수 있다는 점을 포인트로 동적계획법 알고리즘을 사용한다
+
+#include <iostream>
+#include <vector>
+#include <cstring>
+#define N_S  500
+using namespace std;
+
+int n, d[N_S], answer[N_S];
+vector <int> pr[N_S];
+int cache[N_S];
+
+int shortestTime(int index){
+    if(!pr[index].size()){
+        return d[index];
+    }
+    
+    int &ret = cache[index];
+    if(ret != -1){
+        return ret;
+    }
+    
+    ret = d[index];
+    
+    for(int i = 0; i < pr[index].size(); i++){
+        int tmp = shortestTime(pr[index][i]) + d[index];
+        ret = max(ret, tmp);
+    }
+    
+    return ret;
+}
+
+int main(){
+    cin >> n;
+    for(int i = 0; i < n; i++){
+        cin >> d[i];
+        
+        while(true){
+            int num;
+            cin >> num;
+            if(num == -1) break;
+            pr[i].push_back(num - 1);
+        }
+    }
+    
+    memset(cache, -1, sizeof(cache));
+    for(int i = 0; i < n; i ++){
+        answer[i] = shortestTime(i);
+    }
+    
+    for(int i = 0 ; i<n ; i++)
+        cout << answer[i] <<'\n';
+    
+    return 0;
+}
