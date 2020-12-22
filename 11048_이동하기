@@ -1,0 +1,41 @@
+#include <iostream>
+#include <cstring>
+#define MAX 1001
+using namespace std;
+
+int n, m, maze[MAX][MAX], cache[MAX][MAX], dx[3] = {1, 0, 1}, dy[3] = {0, 1, 1};
+
+int dynamic(int x, int y){
+    if(x == n - 1 && y == m - 1){
+        return maze[x][y];
+    }
+    
+    int &ret = cache[x][y];
+    if(ret != -1){
+        return ret;
+    }
+    
+    ret = 0;
+    for(int i = 0; i < 3; i++){
+        int nx = x + dx[i];
+        int ny = y + dy[i];
+        if(nx >= 0 && nx < n && ny >= 0 && ny < m){
+            ret = max(ret, dynamic(nx, ny) + maze[x][y]);
+        }
+    }
+    
+    return ret;
+}
+
+int main(){
+    cin >> n >> m;
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+            cin >> maze[i][j];
+        }
+    }
+    memset(cache, -1, sizeof(cache));
+    cout << dynamic(0, 0);
+    
+    return 0;
+}
