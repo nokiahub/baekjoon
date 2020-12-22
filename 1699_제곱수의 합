@@ -1,0 +1,35 @@
+#include <iostream>
+#include <cstring>
+#include <cmath>
+#define MAX 100001
+using namespace std;
+
+int n, cache[MAX];
+
+int getSquareNumber(int num){
+    if(num == 0){
+        return 0;
+    }
+    
+    int &ret = cache[num];
+    if(ret != -1){
+        return ret;
+    }
+    ret = num;
+    
+    for(int i = 1; i <= sqrt(num); i++){
+        int partNumber = i * i;
+        ret = min(ret, getSquareNumber(num - partNumber) + 1);
+    }
+    
+    return ret;
+    
+}
+
+int main(){
+    cin >> n;
+    memset(cache, -1, sizeof(cache));
+    cout << getSquareNumber(n);
+    
+    return 0;
+}
