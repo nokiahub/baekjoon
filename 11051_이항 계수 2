@@ -1,0 +1,33 @@
+#include <iostream>
+#include <cstring>
+#define MAX 1002
+#define MOD 10007
+using namespace std;
+
+int cache[MAX][MAX];
+
+int dynamic(int n, int k){
+    if(n == k || n == 0 || k == 0){
+        return 1;
+    }
+    if(k == 1){
+        return n;
+    }
+    
+    int &ret = cache[n][k];
+    if(ret != -1){
+        return ret;
+    }
+    
+    return ret = (dynamic(n - 1, k - 1) + dynamic(n - 1, k)) % MOD;
+    
+}
+
+int main(){
+    int n, k;
+    cin >> n >> k;
+    memset(cache, -1, sizeof(cache));
+    cout << dynamic(n, k);
+    
+    return 0;
+}
