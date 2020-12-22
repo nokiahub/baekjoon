@@ -1,0 +1,36 @@
+#include <iostream>
+#include <cstring>
+#define MAX 1002
+using namespace std;
+
+int n, a[MAX], cache[MAX];
+
+int dynamic(int previousIndex){
+    
+    int &ret = cache[previousIndex];
+    if(ret != -1){
+        return ret;
+    }
+    ret = 0;
+    
+    for(int i = previousIndex + 1; i <= n; i++){
+        if(a[i] < a[previousIndex]){
+            ret = max(ret, dynamic(i) + 1);
+        }
+    }
+    
+    return ret;
+
+}
+
+int main(){
+    cin >> n;
+    a[0] = MAX;
+    for(int i = 1; i <= n; i++){
+        cin >> a[i];
+    }
+    memset(cache, -1, sizeof(cache));
+    cout << dynamic(0);
+    
+    return 0;
+}
