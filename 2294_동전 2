@@ -1,0 +1,41 @@
+#include <iostream>
+#include <cstring>
+#define MAX_N 101
+#define MAX_K 100001
+#define INF 123456789
+using namespace std;
+
+int n, k, coin[MAX_N], answer, cache[MAX_N][MAX_K];
+
+int dp(int index, int sum){
+    if(sum > k || index == n){
+        return INF;
+    }
+    
+    if(sum == k){
+        return 0;
+    }
+    
+    int &ret = cache[index][sum];
+    if(ret != -1){
+        return ret;
+    }
+    ret = 0;
+    
+    ret = min(dp(index, sum + coin[index]) + 1, dp(index + 1, sum));
+    return ret;
+}
+
+int main(){
+    cin >> n >> k;
+    for(int i = 0 ; i < n ; i++){
+        cin >> coin[i];
+    }
+    memset(cache, -1, sizeof(cache));
+    answer = dp(0, 0);
+    if(answer > k){
+        answer = -1;
+    }
+    cout << answer;
+    return 0;
+}
