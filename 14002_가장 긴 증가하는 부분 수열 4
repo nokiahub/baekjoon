@@ -1,0 +1,58 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int n, arr[1001], leng = 1001;
+int cache[1001][1001];
+
+int dp(int index, int prev){
+    if(index == n){
+        return 0;
+    }
+    
+    int &ret = cache[index][prev];
+    if(ret != -1){
+        return ret;
+    }
+    
+   
+    ret = dp(index + 1, prev);
+    if(arr[index] > prev){
+        ret = max(ret, dp(index + 1, arr[index]) + 1);
+    }
+    
+    return ret;
+}
+
+void reconstruct(int index, int prev, int leng){
+    if(leng == 1 && arr[index] > prev){
+        printf("%d", arr[index]);
+        return;
+    }
+    
+    int value = cache[index][prev];
+    int nextVal = cache[index + 1][arr[index]];
+    
+    if(nextVal + 1 == value){
+        printf("%d ", arr[index]);
+        reconstruct(index + 1, arr[index], nextVal);
+    }else{
+        reconstruct(index + 1, prev, leng);
+    }
+    
+    return;
+}
+
+int main() {
+    cin >> n;
+    for(int i = 0; i < n; i++){
+        cin >> arr[i];
+    }
+    
+    memset(cache, -1, sizeof(cache));
+    leng = dp(0, 0);
+    cout << leng << '\n';
+    reconstruct(0, 0, leng);
+    
+    return 0;
+}
