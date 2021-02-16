@@ -1,0 +1,25 @@
+#include <stdio.h>
+
+int main(){
+    int n, stars, space;
+    scanf("%d", &n);
+    stars = 1;
+    space = n - 1;
+    
+    for(int i = 0; i < n; i++){
+        
+        for(int j = 0; j < space; j++){
+            printf(" ");
+        }
+        
+        for(int j = 0; j < stars; j++){
+            printf("*");
+        }
+        printf("\n");
+        
+        stars += 2;
+        space -= 1;
+    }
+    
+    return 0;
+}
