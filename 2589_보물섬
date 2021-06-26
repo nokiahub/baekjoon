@@ -1,0 +1,74 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+#include <queue>
+
+using namespace std;
+
+int n, m, dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};
+char map[50][50];
+
+int bfs(int x, int y){
+    bool visited[50][50];
+    int maxDist = 0;
+    
+    memset(visited, false, sizeof(visited));
+    queue <pair<int, int>> coord;
+    queue <int> dist;
+    
+    visited[x][y] = true;
+    coord.push(make_pair(x, y));
+    dist.push(0);
+    
+    while(!coord.empty()){
+        int cur_x = coord.front().first;
+        int cur_y = coord.front().second;
+        int cur_dist = dist.front();
+        
+        coord.pop();
+        dist.pop();
+        
+        maxDist = max(maxDist, cur_dist);
+        
+        for(int i = 0; i < 4; i++){
+            int next_x = cur_x + dx[i];
+            int next_y = cur_y + dy[i];
+            
+            if(next_x >= 0 && next_x < n && next_y >= 0 && next_y < m){
+                if(!visited[next_x][next_y] && map[next_x][next_y] == 'L'){
+                    visited[next_x][next_y] = true;
+                    coord.push(make_pair(next_x, next_y));
+                    dist.push(cur_dist + 1);
+                }
+            }
+        }
+    }
+    
+    return maxDist;
+}
+
+int main(int argc, const char * argv[]) {
+    int answer = 0;
+    cin >> n >> m;
+    
+    for(int i = 0; i < n; i++){
+        string s;
+        cin >> s;
+        
+        for(int j = 0; j < m; j++){
+            map[i][j] = s[j];
+        }
+    }
+    
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+            if(map[i][j] == 'L'){
+                int result = bfs(i, j);
+                answer = max(answer, result);
+            }
+        }
+    }
+    
+    cout << answer;
+    return 0;
+}
